@@ -2,3 +2,5 @@ backend/data/
 backend/output/
 
 __pycache__
+
+*.ipynb
