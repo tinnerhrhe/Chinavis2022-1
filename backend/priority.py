@@ -5,7 +5,7 @@ node_priority = {
     'Whois_Name': 2,        # 重要
     'Whois_Phone': 2,
     'Whois_Email': 2,
-    'IP_C': 3,              # 一般
+    'IP_CIDR': 3,              # 一般
     'ASN': 3
 }
 
