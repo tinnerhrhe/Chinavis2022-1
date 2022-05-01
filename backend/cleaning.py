@@ -7,6 +7,25 @@ link = pd.read_csv('data/Link.csv')
 
 # 可能的方法：
 
-# 高优先级节点 node_priority[node['type']]==1
-# 空的 industry
-# 低优先级的 relation
+# 高优先级节点 node_priority[node['type']]==1       98.7%
+# 空的 industry                                    13.8%
+# 低优先级的 relation                               87.8%
+
+# 按下划线分隔
+nodespl = pd.merge(
+    node, 
+    node['id'].str.rsplit('_',1,expand=True),
+    how='left', left_index=True, right_index=True)
+
+# 计算优先级
+nodespl['priority'] = nodespl[0].apply(lambda x: node_priority[x])
+
+# 优先级为 1 且行业不为空
+nodefil = nodespl[(nodespl['priority'] == 1) & (nodespl['industry'] != '[]')]
+
+# 联系
+linkspl = pd.merge(link['relation'], pd.merge(link['source'].str.rsplit('_',1,expand=True), link['target'].str.rsplit('_',1,expand=True), how='left', left_index=True, right_index=True), how='left', left_index=True, right_index=True)
+
+linkspl['x_p'] = linkspl['0_x'].apply(lambda x: node_priority[x])
+linkspl['y_p'] = linkspl['0_y'].apply(lambda x: node_priority[x])
+linkfil = linkspl[(linkspl['x_p']==1) & (linkspl['y_p']==1)]
