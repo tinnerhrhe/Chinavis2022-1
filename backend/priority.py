@@ -30,3 +30,9 @@ link_limit = {
     2: 3,
     1: 4
 }
+
+net_limit = {
+    'small' : { 'node': 400, 'edge': 800 },
+    'medium': { 'node': 800, 'edge': 1600 },
+    'large': { 'node': 3000, 'edge': 6000 }
+}

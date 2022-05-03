@@ -6,6 +6,19 @@ node = pd.read_csv('data/Node.csv')
 
 link = pd.read_csv('data/Link.csv')
 
+# If it is core asset
+def coreasset(children):
+    if len(children) == 0:
+        return False
+    rel_cnt = children.groupby(['relation']).count()
+    rel_pop = rel_cnt['target'].max() / len(children)
+    rel_top = rel_cnt['target'].idxmax()
+    if rel_pop > 0.5 and link_priority[rel_top] == 4:
+        return False
+    if 'r_dns_a' in rel_cnt.index.values and rel_cnt['target']['r_dns_a'] > 2:
+        return False
+    return True
+
 # depth limited search
 def dls(node_str, limit):
     # terminate dls
@@ -13,12 +26,16 @@ def dls(node_str, limit):
         return {}
 
     children = link[link['source']==node_str]
+    children = children[['relation','target']]
     subgraph = {}
 
     # filter
     if len(children['relation'].unique()) == 1 and len(children) > 100:
-        children = children.head(2)
-    
+        children = children.head(100)
+
+    if coreasset(children):
+        pass
+
     # dls
     for rowindex, x in children.iterrows():
         cur_link_target = x['target']
