@@ -96,9 +96,9 @@ def ucs(node_str, node_limit):
                 cur_link_target = x['target']
                 if cur_link_target not in explored:
                     cur_link_priority = link_priority[x['relation']]
-                    if cur_link_priority > next_link_priority:
-                        next_link_priority = cur_link_priority
-                    heapq.heappush(q, (next_link_priority, cur_link_target))
+                    if next_link_priority > cur_link_priority:
+                        cur_link_priority = next_link_priority
+                    heapq.heappush(q, (cur_link_priority, cur_link_target))
                     graphdata["edges"].append({"source": closest_node, "target": cur_link_target})
         
         if node_limit == 0:
@@ -108,7 +108,7 @@ def ucs(node_str, node_limit):
 
 
 graph = ucs(
-    "Domain_c58c149eec59bb14b0c102a0f303d4c20366926b5c3206555d2937474124beb9",
+    "Domain_b10f98a9b53806ccd3a5ee45676c7c09366545c5b12aa96955cde3953e7ad058",
     net_limit["small"]["node"],
 )
 
