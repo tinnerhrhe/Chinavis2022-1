@@ -31,19 +31,30 @@ def coreasset(children):
         return False
     return True
 
-
 # Uniform Cost Search
 # Will search for the closest distance near the target node.
 def ucs(node_str, node_limit, edge_limit):
-
     # Store the data for Ant G6
     graphdata = {"nodes": [], "edges": []}
+
+    # Store the core nodes and critical paths
+    coredata = {"nodes": [], "paths": []}
+
+    # Store the stat
+    statdata = {"nodes": {}, "edges": {}}
+
+    def addnode(node_type):
+        if node_type not in statdata["nodes"].keys(): statdata["nodes"][node_type] = 1
+        else: statdata["nodes"][node_type] += 1
+    def addedge(edge_type):
+        if edge_type not in statdata["edges"].keys(): statdata["edges"][edge_type] = 1
+        else: statdata["edges"][edge_type] += 1
 
     # Sort the queue insertion by the link priority
     q = []
     # This will pop the smallest element.
     # The priority will only be defined by the priority of the edge.
-    # initialize the priority = 2 -> 4 limit as initial
+    # initialize the priority = 2 -> 4 limit as initial and pop out remains 3
     heapq.heappush(q, (1, node_str))
     # Explored
     explored = set()
@@ -62,6 +73,7 @@ def ucs(node_str, node_limit, edge_limit):
             
             # the label of the node
             label = closest_node.rsplit("_")[0]
+            addnode(label)
 
             # Get the children of the node
             children = link[link["source"] == closest_node]
@@ -75,10 +87,11 @@ def ucs(node_str, node_limit, edge_limit):
             else:
                 neighbor = children
 
-            print(len(neighbor), end=" ")
+            print(len(neighbor), end="")
 
             style = default_style
-            if coreasset(neighbor):
+            is_core = coreasset(neighbor)
+            if is_core:
                 corecnt += 1
                 label += "_" + str(corecnt)
                 style = core_style
@@ -91,26 +104,31 @@ def ucs(node_str, node_limit, edge_limit):
                 graphdata["nodes"].append(
                     {"id": closest_node, "label": label, "style": style}
                 )
+                if is_core: coredata["nodes"].append(closest_node)
 
             # filter
             if len(neighbor['relation'].unique()) == 1 and len(neighbor) > 100:
                 neighbor = neighbor.head(filter_limit)
+                print("(%d)" % len(neighbor), end="")
+            print(" ", end="")
 
             # decrease the priority
             next_link_priority = closest_link_priority + 1
             if next_link_priority not in link_limit.keys(): break
 
             # push the layer
-            for _, x in neighbor.iterrows():
+            for lid, x in neighbor.iterrows():
                 cur_link_source = x['source']
                 cur_link_target = x['target']
+                cur_link_relation = x['relation']
                 cur_tail = cur_link_source if cur_link_target == closest_node else cur_link_target
                 if cur_tail not in explored:
                     cur_link_priority = link_priority[x['relation']]
                     if next_link_priority > cur_link_priority:
                         cur_link_priority = next_link_priority
                     heapq.heappush(q, (cur_link_priority, cur_tail))
-                    graphdata["edges"].append({"source": cur_link_source, "target": cur_link_target})
+                    graphdata["edges"].append({"source": cur_link_source, "target": cur_link_target, "label": cur_link_relation})
+                    addedge(cur_link_relation)
                     edge_limit -= 1
                     if edge_limit == 0: break
             
@@ -119,10 +137,10 @@ def ucs(node_str, node_limit, edge_limit):
         if node_limit == 0: break
         if edge_limit == 0: break
 
-    return graphdata
+    return graphdata, coredata, statdata
 
 
-graph = ucs(
+graph, core, stat = ucs(
     "Domain_b10f98a9b53806ccd3a5ee45676c7c09366545c5b12aa96955cde3953e7ad058",
     net_limit["small"]["node"],
     net_limit["small"]["edge"]
@@ -134,3 +152,9 @@ with open('output/graph.json','w') as f:
     f.write(json.dumps(graph))
 
 print("Data Write Complete.")
+
+nodecnt = sum([stat["nodes"][t] for t in stat["nodes"].keys()])
+edgecnt = sum([stat["edges"][t] for t in stat["edges"].keys()])
+print("Node cnt: %d" % nodecnt)
+print("Edge cnt: %d" % edgecnt)
+print(stat)
