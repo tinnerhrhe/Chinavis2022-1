@@ -1,3 +1,4 @@
+from sklearn import neighbors
 from priority import *
 import pandas as pd
 import heapq
@@ -7,8 +8,8 @@ import json
 # from cleaning import *
 
 # use cleaned data
-node = pd.read_csv('data/Nodefil.csv')
-link = pd.read_csv('data/Linkfil.csv')
+node = pd.read_csv('data/Node.csv')
+link = pd.read_csv('data/Link.csv')
 
 print("Load Data Complete.")
 
@@ -59,14 +60,26 @@ def ucs(node_str, node_limit):
             node_limit -= 1
             if node_limit == 0:
                 break
+            
+            # the label of the node
+            label = closest_node.rsplit("_")[0]
 
             # Get the children of the node
             children = link[link["source"] == closest_node]
-            children = children[["relation", "target"]]
 
-            label = node_str.rsplit("_")[0]
+            # for IP and Cert, they are the leaves in the filtered graph.
+            # And the relation is also at priority 1,
+            # so an inverse push should be applies as well.
+            if label == 'IP' or label == 'Cert':
+                father = link[link["target"] == closest_node]
+                neighbor = pd.merge(children, father, 'outer')
+            else:
+                neighbor = children
+
+            print(len(neighbor), end=" ")
+
             style = default_style
-            if coreasset(children):
+            if coreasset(neighbor):
                 corecnt += 1
                 label += "_" + str(corecnt)
                 style = core_style
@@ -81,25 +94,26 @@ def ucs(node_str, node_limit):
                 )
 
             # filter
-            if len(children['relation'].unique()) == 1 and len(children) > 100:
-                children = children.head(filter_limit)
+            if len(neighbor['relation'].unique()) == 1 and len(neighbor) > 100:
+                neighbor = neighbor.head(filter_limit)
 
             # decrease the priority
             next_link_priority = closest_link_priority + 1
             if next_link_priority not in link_limit.keys():
                 break
 
-            print(len(children))
-
             # push the layer
-            for _, x in children.iterrows():
+            for _, x in neighbor.iterrows():
+                cur_link_source = x['source']
                 cur_link_target = x['target']
-                if cur_link_target not in explored:
+                cur_tail = cur_link_source if cur_link_target == closest_node else cur_link_target
+                if cur_tail not in explored:
                     cur_link_priority = link_priority[x['relation']]
                     if next_link_priority > cur_link_priority:
                         cur_link_priority = next_link_priority
-                    heapq.heappush(q, (cur_link_priority, cur_link_target))
-                    graphdata["edges"].append({"source": closest_node, "target": cur_link_target})
+                    heapq.heappush(q, (cur_link_priority, cur_tail))
+                    graphdata["edges"].append({"source": cur_link_source, "target": cur_link_target})
+
         
         if node_limit == 0:
             break
