@@ -16,20 +16,33 @@ print("Load Data Complete.")
 default_style = {}
 core_style = {"fill": "blue"}
 
-filter_limit = 10
+filter_limit = 20
+filter_threshold = 100
 
 # If it is core asset
-def coreasset(children):
-    if len(children) == 0:
+def coreasset(neighbor):
+    if len(neighbor) == 0:
         return False
-    rel_cnt = children.groupby(["relation"]).count()
-    rel_pop = rel_cnt["target"].max() / len(children)
+    rel_cnt = neighbor.groupby(["relation"]).count()
+    rel_pop = rel_cnt["target"].max() / len(neighbor)
     rel_top = rel_cnt["target"].idxmax()
     if rel_pop > 0.5 and link_priority[rel_top] == 4:
         return False
     if "r_dns_a" in rel_cnt.index.values and rel_cnt["target"]["r_dns_a"] > 2:
         return False
     return True
+
+# Filter the same nodes into a smaller number.
+def filter(neighbor):
+    return neighbor.groupby(['relation']).apply(lambda x: x.sample(n=filter_limit) if len(x) > filter_threshold else x)
+
+# Find key in the priority queue.
+def findkey(pq, key):
+    for i in range(len(pq)):
+        if pq[i][1] == key:
+            return i
+    return -1
+
 
 # Uniform Cost Search
 # Will search for the closest distance near the target node.
@@ -68,12 +81,13 @@ def ucs(node_str, node_limit, edge_limit):
             closest_link_priority = q[0][0]
             closest_node = heapq.heappop(q)
             closest_node = closest_node[1] # get the string
-            node_limit -= 1
-            if node_limit == 0: break
-            
-            # the label of the node
             label = closest_node.rsplit("_")[0]
-            addnode(label)
+
+            if closest_node not in explored:
+                if node_limit == 0: break
+                node_limit -= 1
+                # the label of the node
+                addnode(label)
 
             # Get the children of the node
             children = link[link["source"] == closest_node]
@@ -105,10 +119,10 @@ def ucs(node_str, node_limit, edge_limit):
                     {"id": closest_node, "label": label, "style": style}
                 )
                 if is_core: coredata["nodes"].append(closest_node)
-
+            
             # filter
-            if len(neighbor['relation'].unique()) == 1 and len(neighbor) > 100:
-                neighbor = neighbor.head(filter_limit)
+            if len(neighbor) > filter_threshold:
+                neighbor = filter(neighbor)
                 print("(%d)" % len(neighbor), end="")
             print(" ", end="")
 
@@ -122,15 +136,23 @@ def ucs(node_str, node_limit, edge_limit):
                 cur_link_target = x['target']
                 cur_link_relation = x['relation']
                 cur_tail = cur_link_source if cur_link_target == closest_node else cur_link_target
-                if cur_tail not in explored:
-                    cur_link_priority = link_priority[x['relation']]
-                    if next_link_priority > cur_link_priority:
-                        cur_link_priority = next_link_priority
+
+                qidx = findkey(q, cur_tail)
+
+                cur_link_priority = link_priority[x['relation']]
+                if next_link_priority > cur_link_priority:
+                    cur_link_priority = next_link_priority
+                
+                if cur_tail not in explored and qidx == -1:
                     heapq.heappush(q, (cur_link_priority, cur_tail))
-                    graphdata["edges"].append({"source": cur_link_source, "target": cur_link_target, "label": cur_link_relation})
-                    addedge(cur_link_relation)
-                    edge_limit -= 1
-                    if edge_limit == 0: break
+                elif qidx > -1 and cur_link_priority < q[qidx][0]:
+                    q[qidx][0] = cur_link_priority
+                    heapq.heapify(q)
+                
+                graphdata["edges"].append({"source": cur_link_source, "target": cur_link_target, "label": cur_link_relation})
+                addedge(cur_link_relation)
+                edge_limit -= 1
+                if edge_limit == 0: break
             
             if edge_limit == 0: break
         
