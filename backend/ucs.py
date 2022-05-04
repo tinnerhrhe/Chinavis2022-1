@@ -16,7 +16,7 @@ print("Load Data Complete.")
 default_style = {}
 core_style = {"fill": "blue"}
 
-filter_limit = 20
+filter_limit = 10
 
 # If it is core asset
 def coreasset(children):
@@ -34,7 +34,7 @@ def coreasset(children):
 
 # Uniform Cost Search
 # Will search for the closest distance near the target node.
-def ucs(node_str, node_limit):
+def ucs(node_str, node_limit, edge_limit):
 
     # Store the data for Ant G6
     graphdata = {"nodes": [], "edges": []}
@@ -58,8 +58,7 @@ def ucs(node_str, node_limit):
             closest_node = heapq.heappop(q)
             closest_node = closest_node[1] # get the string
             node_limit -= 1
-            if node_limit == 0:
-                break
+            if node_limit == 0: break
             
             # the label of the node
             label = closest_node.rsplit("_")[0]
@@ -99,8 +98,7 @@ def ucs(node_str, node_limit):
 
             # decrease the priority
             next_link_priority = closest_link_priority + 1
-            if next_link_priority not in link_limit.keys():
-                break
+            if next_link_priority not in link_limit.keys(): break
 
             # push the layer
             for _, x in neighbor.iterrows():
@@ -113,10 +111,13 @@ def ucs(node_str, node_limit):
                         cur_link_priority = next_link_priority
                     heapq.heappush(q, (cur_link_priority, cur_tail))
                     graphdata["edges"].append({"source": cur_link_source, "target": cur_link_target})
-
+                    edge_limit -= 1
+                    if edge_limit == 0: break
+            
+            if edge_limit == 0: break
         
-        if node_limit == 0:
-            break
+        if node_limit == 0: break
+        if edge_limit == 0: break
 
     return graphdata
 
@@ -124,6 +125,7 @@ def ucs(node_str, node_limit):
 graph = ucs(
     "Domain_b10f98a9b53806ccd3a5ee45676c7c09366545c5b12aa96955cde3953e7ad058",
     net_limit["small"]["node"],
+    net_limit["small"]["edge"]
 )
 
 print("Data Mining Complete.")
