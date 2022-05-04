@@ -1,13 +1,17 @@
 from queue import PriorityQueue
 from priority import *
-from cleaning import *
 import pandas as pd
 import heapq
 import json
 
+# run cleaning.py first for filtered data.
+# from cleaning import *
+
 # use cleaned data
-node = nodefil
-link = linkfil
+node = pd.read_csv('data/Nodefil.csv')
+link = pd.read_csv('data/Linkfil.csv')
+
+print("Load Data Complete.")
 
 default_style = {}
 core_style = {"fill": "blue"}
@@ -52,6 +56,7 @@ def ucs(node_str, node_limit):
             # Get the current priority
             closest_link_priority = q[0][0]
             closest_node = heapq.heappop(q)
+            closest_node = closest_node[1] # get the string
             node_limit -= 1
             if node_limit == 0:
                 break
@@ -70,7 +75,7 @@ def ucs(node_str, node_limit):
             # Set the node as explored,
             # only consider the centrality of the target node
             # instead of the interaction between nodes.
-            if closest_node in explored:
+            if closest_node not in explored:
                 explored.add(closest_node)
                 graphdata["nodes"].append(
                     {"id": closest_node, "label": label, "style": style}
@@ -106,6 +111,9 @@ graph = ucs(
     net_limit["small"]["node"],
 )
 
+print("Data Mining Complete.")
+
 with open('output/graph.json','w') as f:
     f.write(json.dumps(graph))
 
+print("Data Write Complete.")
