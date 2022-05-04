@@ -6,6 +6,8 @@ node = pd.read_csv('data/Node.csv')
 
 link = pd.read_csv('data/Link.csv')
 
+corenodes = []
+
 # If it is core asset
 def coreasset(children):
     if len(children) == 0:
@@ -29,12 +31,15 @@ def dls(node_str, limit):
     children = children[['relation','target']]
     subgraph = {}
 
+    # detect core asset
+    # can be detected in place
+    # so you can calculate core path as well
+    if coreasset(children):
+        corenodes.append(node_str)
+
     # filter
     if len(children['relation'].unique()) == 1 and len(children) > 100:
-        children = children.head(100)
-
-    if coreasset(children):
-        pass
+        children = children.head(20)
 
     # dls
     for rowindex, x in children.iterrows():
