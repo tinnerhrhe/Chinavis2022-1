@@ -1,4 +1,3 @@
-from queue import PriorityQueue
 from priority import *
 import pandas as pd
 import heapq
@@ -43,8 +42,8 @@ def ucs(node_str, node_limit):
     q = []
     # This will pop the smallest element.
     # The priority will only be defined by the priority of the edge.
-    # initialize the priority = 2 -> 3 limit
-    heapq.heappush(q, (2, node_str))
+    # initialize the priority = 2 -> 4 limit as initial
+    heapq.heappush(q, (1, node_str))
     # Explored
     explored = set()
     # Core node count
@@ -62,7 +61,7 @@ def ucs(node_str, node_limit):
                 break
 
             # Get the children of the node
-            children = link[link["source"] == node_str]
+            children = link[link["source"] == closest_node]
             children = children[["relation", "target"]]
 
             label = node_str.rsplit("_")[0]
@@ -89,6 +88,8 @@ def ucs(node_str, node_limit):
             next_link_priority = closest_link_priority + 1
             if next_link_priority not in link_limit.keys():
                 break
+
+            print(len(children))
 
             # push the layer
             for _, x in children.iterrows():
