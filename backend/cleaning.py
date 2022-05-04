@@ -27,7 +27,7 @@ nodefil = nodespl[nodespl['priority'] == 1]
 # nodefil = nodefil[nodespl['industry'] != '[]']
 
 # 联系
-linkspl = pd.merge(link['relation'], pd.merge(link['source'].str.rsplit('_',1,expand=True), link['target'].str.rsplit('_',1,expand=True), how='left', left_index=True, right_index=True), how='left', left_index=True, right_index=True)
+linkspl = pd.merge(link, pd.merge(link['source'].str.rsplit('_',1,expand=True), link['target'].str.rsplit('_',1,expand=True), how='left', left_index=True, right_index=True), how='left', left_index=True, right_index=True)
 
 linkspl['x_p'] = linkspl['0_x'].apply(lambda x: node_priority[x])
 linkspl['y_p'] = linkspl['0_y'].apply(lambda x: node_priority[x])
@@ -35,3 +35,7 @@ linkfil = linkspl[(linkspl['x_p']==1) & (linkspl['y_p']==1)]
 
 # 图密度 = 1e-06 Sparse
 density = 2 * len(linkfil) / (len(nodefil) * (len(nodefil) - 1))
+
+# 输出
+nodefil[['id','name','type','industry']].to_csv('data/Nodefil.csv')
+linkfil[['relation','source','target']].to_csv('data/Linkfil.csv')
