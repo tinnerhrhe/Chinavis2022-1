@@ -45,8 +45,8 @@ def filter(neighbor):
     return neighbor.groupby(["relation"]).apply(
         lambda x: x.head(int(filter_limit * math.log(len(x), filter_threshold)))
         if len(x) > filter_threshold
-        else x
-    )
+        else x.head(len(x)) # dummy trick, could be better.
+    ).droplevel(0)
 
 
 # Find key in the priority queue.
@@ -110,7 +110,7 @@ def ucs(node_str, node_limit, edge_limit):
             # so an inverse push should be applies as well.
             if label == "IP" or label == "Cert":
                 father = link[link["target"] == closest_node]
-                neighbor = pd.merge(children, father, "outer")
+                neighbor = pd.concat([children, father])
             else:
                 neighbor = children
 
