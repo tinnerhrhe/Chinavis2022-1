@@ -116,13 +116,6 @@ def ucs(node_str, node_limit, edge_limit):
 
             print(len(neighbor), end="")
 
-            style = default_style
-            is_core = coreasset(neighbor)
-            if is_core:
-                corecnt += 1
-                label += "_" + str(corecnt)
-                style = core_style
-
             # Set the node as explored,
             # only consider the centrality of the target node
             # instead of the interaction between nodes.
@@ -133,12 +126,19 @@ def ucs(node_str, node_limit, edge_limit):
                 node_limit -= 1
                 # the label of the node
                 addnode(label)
+                
                 explored.add(closest_node)
+
+                style = default_style
+                if coreasset(neighbor):
+                    coredata["nodes"].append(closest_node)
+                    corecnt += 1
+                    label += "_" + str(corecnt)
+                    style = core_style
+                
                 graphdata["nodes"].append(
                     {"id": closest_node, "label": label, "style": style}
                 )
-                if is_core:
-                    coredata["nodes"].append(closest_node)
 
             # filter
             if len(neighbor) > filter_threshold:
