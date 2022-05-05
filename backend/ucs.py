@@ -54,7 +54,7 @@ def ucs(node_str, node_limit, edge_limit):
     graphdata = {"nodes": [], "edges": []}
 
     # Store the core nodes and critical paths
-    # TODO: implement critical paths
+    # TODO: implement critical paths (approximation)
     coredata = {"nodes": [], "paths": []}
 
     # Store the stat
@@ -72,7 +72,7 @@ def ucs(node_str, node_limit, edge_limit):
     # This will pop the smallest element.
     # The priority will only be defined by the priority of the edge.
     # initialize the priority = 2 -> 4 limit as initial and pop out remains 3
-    heapq.heappush(q, (1, node_str))
+    heapq.heappush(q, [1, node_str])
     # Explored
     explored = set()
     # Core node count
@@ -143,14 +143,14 @@ def ucs(node_str, node_limit, edge_limit):
 
                 qidx = findkey(q, cur_tail)
 
-                cur_link_priority = link_priority[x['relation']]
-                if next_link_priority > cur_link_priority:
-                    cur_link_priority = next_link_priority
+                cur_link_priority = link_priority[x['relation']] # ground truth
                 
                 flag = False
 
                 if cur_tail not in explored and qidx == -1:
-                    heapq.heappush(q, (cur_link_priority, cur_tail))
+                    if next_link_priority > cur_link_priority:
+                        cur_link_priority = next_link_priority  # limited search
+                    heapq.heappush(q, [cur_link_priority, cur_tail])
                     flag = True
                 elif qidx > -1 and cur_link_priority < q[qidx][0]:
                     q[qidx][0] = cur_link_priority
