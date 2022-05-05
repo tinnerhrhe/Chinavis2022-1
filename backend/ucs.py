@@ -1,3 +1,4 @@
+import math
 from sklearn import neighbors
 from priority import *
 import pandas as pd
@@ -16,7 +17,7 @@ print("Load Data Complete.")
 default_style = {}
 core_style = {"fill": "blue"}
 
-core_limit = 10
+core_limit = 6
 filter_limit = 20
 filter_threshold = 100
 
@@ -37,7 +38,7 @@ def coreasset(neighbor):
 
 # Filter the same nodes into a smaller number.
 def filter(neighbor):
-    return neighbor.groupby(['relation']).apply(lambda x: x.sample(n=filter_limit) if len(x) > filter_threshold else x)
+    return neighbor.groupby(['relation']).apply(lambda x: x.head(int(filter_limit * math.log(len(x), filter_threshold))) if len(x) > filter_threshold else x)
 
 # Find key in the priority queue.
 def findkey(pq, key):
@@ -146,16 +147,21 @@ def ucs(node_str, node_limit, edge_limit):
                 if next_link_priority > cur_link_priority:
                     cur_link_priority = next_link_priority
                 
+                flag = False
+
                 if cur_tail not in explored and qidx == -1:
                     heapq.heappush(q, (cur_link_priority, cur_tail))
+                    flag = True
                 elif qidx > -1 and cur_link_priority < q[qidx][0]:
                     q[qidx][0] = cur_link_priority
                     heapq.heapify(q)
+                    flag = True
                 
-                graphdata["edges"].append({"id": str(lid), "source": cur_link_source, "target": cur_link_target, "label": cur_link_relation})
-                addedge(cur_link_relation)
-                edge_limit -= 1
-                if edge_limit == 0: break
+                if flag:
+                    graphdata["edges"].append({"id": str(lid), "source": cur_link_source, "target": cur_link_target, "label": cur_link_relation})
+                    addedge(cur_link_relation)
+                    edge_limit -= 1
+                    if edge_limit == 0: break
             
             if edge_limit == 0: break
         
@@ -166,7 +172,7 @@ def ucs(node_str, node_limit, edge_limit):
 
 
 graph, core, stat = ucs(
-    "Domain_7939d01c5b99c39d2a0f2b418f6060b917804e60c15309811ef4059257c0818a",
+    "Domain_c58c149eec59bb14b0c102a0f303d4c20366926b5c3206555d2937474124beb9",
     net_limit["small"]["node"],
     net_limit["small"]["edge"]
 )
@@ -179,6 +185,7 @@ with open('output/graph.json','w') as f:
 print("Data Write Complete.")
 
 print("Core cnt: %d" % len(core["nodes"]))
+print(core["nodes"])
 
 nodecnt = sum([stat["nodes"][t] for t in stat["nodes"].keys()])
 edgecnt = sum([stat["edges"][t] for t in stat["edges"].keys()])
