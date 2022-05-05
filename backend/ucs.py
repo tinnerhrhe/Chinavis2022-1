@@ -16,6 +16,7 @@ print("Load Data Complete.")
 default_style = {}
 core_style = {"fill": "blue"}
 
+core_limit = 10
 filter_limit = 20
 filter_threshold = 100
 
@@ -30,6 +31,8 @@ def coreasset(neighbor):
         return False
     if "r_dns_a" in rel_cnt.index.values and rel_cnt["target"]["r_dns_a"] > 2:
         return False
+    if len(neighbor) <= core_limit: # A small amount of neighbors should not be regarded as core asset.
+        return False
     return True
 
 # Filter the same nodes into a smaller number.
@@ -43,7 +46,6 @@ def findkey(pq, key):
             return i
     return -1
 
-
 # Uniform Cost Search
 # Will search for the closest distance near the target node.
 def ucs(node_str, node_limit, edge_limit):
@@ -51,6 +53,7 @@ def ucs(node_str, node_limit, edge_limit):
     graphdata = {"nodes": [], "edges": []}
 
     # Store the core nodes and critical paths
+    # TODO: implement critical paths
     coredata = {"nodes": [], "paths": []}
 
     # Store the stat
@@ -149,7 +152,7 @@ def ucs(node_str, node_limit, edge_limit):
                     q[qidx][0] = cur_link_priority
                     heapq.heapify(q)
                 
-                graphdata["edges"].append({"source": cur_link_source, "target": cur_link_target, "label": cur_link_relation})
+                graphdata["edges"].append({"id": str(lid), "source": cur_link_source, "target": cur_link_target, "label": cur_link_relation})
                 addedge(cur_link_relation)
                 edge_limit -= 1
                 if edge_limit == 0: break
@@ -163,7 +166,7 @@ def ucs(node_str, node_limit, edge_limit):
 
 
 graph, core, stat = ucs(
-    "Domain_b10f98a9b53806ccd3a5ee45676c7c09366545c5b12aa96955cde3953e7ad058",
+    "Domain_7939d01c5b99c39d2a0f2b418f6060b917804e60c15309811ef4059257c0818a",
     net_limit["small"]["node"],
     net_limit["small"]["edge"]
 )
@@ -174,6 +177,8 @@ with open('output/graph.json','w') as f:
     f.write(json.dumps(graph))
 
 print("Data Write Complete.")
+
+print("Core cnt: %d" % len(core["nodes"]))
 
 nodecnt = sum([stat["nodes"][t] for t in stat["nodes"].keys()])
 edgecnt = sum([stat["edges"][t] for t in stat["edges"].keys()])
