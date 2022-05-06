@@ -93,107 +93,111 @@ def ucs(node_str, node_limit, edge_limit):
     # Core node count
     corecnt = 0
 
+    # TODO: A dynamic feedback could be implemented?
+
+    # You cannot put a hard limiter for depth here
+    # Since UCS will maintain a priority queue
+    # Such that the position of node in the queue
+    # is not fixed as a regular BFS algorithm.
+    # The nodes in different level could be exchanged.
+    # So we use a dynamic label to mark the limited priority.
+
     while len(q) > 0:
-        cnt = len(q)
-        for _ in range(cnt):
-            # Get the current priority
-            closest_link_priority = q[0][0]
-            closest_node = heapq.heappop(q)
-            closest_node = closest_node[1]  # get the string
-            label = closest_node.rsplit("_")[0]
+        # Get the current priority
+        closest_link_priority = q[0][0]
+        closest_node = heapq.heappop(q)
+        closest_node = closest_node[1]  # get the string
+        label = closest_node.rsplit("_")[0]
 
-            # Get the children of the node
-            children = link[link["source"] == closest_node]
+        # Get the children of the node
+        children = link[link["source"] == closest_node]
 
-            # for IP and Cert, they are the leaves in the filtered graph.
-            # And the relation is also at priority 1,
-            # so an inverse push should be applies as well.
-            if label == "IP" or label == "Cert":
-                father = link[link["target"] == closest_node]
-                neighbor = pd.concat([children, father])
-            else:
-                neighbor = children
+        # for IP and Cert, they are the leaves in the filtered graph.
+        # And the relation is also at priority 1,
+        # so an inverse push should be applies as well.
+        if label == "IP" or label == "Cert":
+            father = link[link["target"] == closest_node]
+            neighbor = pd.concat([children, father])
+        else:
+            neighbor = children
 
-            print(len(neighbor), end="")
+        print(len(neighbor), end="")
 
-            # Set the node as explored,
-            # only consider the centrality of the target node
-            # instead of the interaction between nodes.
-            if closest_node not in explored:
-                # cut off
-                if node_limit == 0:
+        # Set the node as explored,
+        # only consider the centrality of the target node
+        # instead of the interaction between nodes.
+        if closest_node not in explored:
+            # cut off
+            if node_limit == 0:
+                break
+            node_limit -= 1
+            # the label of the node
+            addnode(label)
+            
+            explored.add(closest_node)
+
+            style = default_style
+            if coreasset(neighbor):
+                coredata["nodes"].append(closest_node)
+                corecnt += 1
+                label += "_" + str(corecnt)
+                style = core_style
+            
+            graphdata["nodes"].append(
+                {"id": closest_node, "label": label, "style": style}
+            )
+
+        # filter
+        if len(neighbor) > filter_threshold:
+            neighbor = filter(neighbor)
+            print("(%d)" % len(neighbor), end="")
+        print(" ", end="")
+
+        # decrease the priority
+        next_link_priority = closest_link_priority + 1
+        if next_link_priority not in link_limit.keys():
+            continue # ignore the its neighbors.
+
+        # push the layer
+        for lid, x in neighbor.iterrows():
+            cur_link_source = x["source"]
+            cur_link_target = x["target"]
+            cur_link_relation = x["relation"]
+            cur_tail = (
+                cur_link_source
+                if cur_link_target == closest_node
+                else cur_link_target
+            )
+
+            qidx = findkey(q, cur_tail)
+
+            cur_link_priority = link_priority[x["relation"]]  # ground truth
+
+            flag = False
+
+            if cur_tail not in explored and qidx == -1:
+                if next_link_priority > cur_link_priority:
+                    cur_link_priority = next_link_priority  # limited search
+                heapq.heappush(q, [cur_link_priority, cur_tail])
+                flag = True
+            elif qidx > -1 and cur_link_priority < q[qidx][0]:  # comp with ground truth
+                q[qidx][0] = cur_link_priority
+                heapq.heapify(q)
+                flag = True
+
+            if flag:
+                graphdata["edges"].append(
+                    {
+                        "id": str(lid),
+                        "source": cur_link_source,
+                        "target": cur_link_target,
+                        "label": cur_link_relation,
+                    }
+                )
+                addedge(cur_link_relation)
+                edge_limit -= 1
+                if edge_limit == 0:
                     break
-                node_limit -= 1
-                # the label of the node
-                addnode(label)
-                
-                explored.add(closest_node)
-
-                style = default_style
-                if coreasset(neighbor):
-                    coredata["nodes"].append(closest_node)
-                    corecnt += 1
-                    label += "_" + str(corecnt)
-                    style = core_style
-                
-                graphdata["nodes"].append(
-                    {"id": closest_node, "label": label, "style": style}
-                )
-
-            # filter
-            if len(neighbor) > filter_threshold:
-                neighbor = filter(neighbor)
-                print("(%d)" % len(neighbor), end="")
-            print(" ", end="")
-
-            # decrease the priority
-            next_link_priority = closest_link_priority + 1
-            if next_link_priority not in link_limit.keys():
-                break
-
-            # push the layer
-            for lid, x in neighbor.iterrows():
-                cur_link_source = x["source"]
-                cur_link_target = x["target"]
-                cur_link_relation = x["relation"]
-                cur_tail = (
-                    cur_link_source
-                    if cur_link_target == closest_node
-                    else cur_link_target
-                )
-
-                qidx = findkey(q, cur_tail)
-
-                cur_link_priority = link_priority[x["relation"]]  # ground truth
-
-                flag = False
-
-                if cur_tail not in explored and qidx == -1:
-                    if next_link_priority > cur_link_priority:
-                        cur_link_priority = next_link_priority  # limited search
-                    heapq.heappush(q, [cur_link_priority, cur_tail])
-                    flag = True
-                elif qidx > -1 and cur_link_priority < q[qidx][0]:  # comp with ground truth
-                    q[qidx][0] = cur_link_priority
-                    heapq.heapify(q)
-                    flag = True
-
-                if flag:
-                    graphdata["edges"].append(
-                        {
-                            "id": str(lid),
-                            "source": cur_link_source,
-                            "target": cur_link_target,
-                            "label": cur_link_relation,
-                        }
-                    )
-                    addedge(cur_link_relation)
-                    edge_limit -= 1
-                    if edge_limit == 0:
-                        break
-
-            if edge_limit == 0:
-                break
 
         if node_limit == 0:
             break
@@ -214,10 +218,12 @@ print("Data Mining Complete.")
 with open("output/graph.json", "w") as f:
     f.write(json.dumps(graph))
 
+with open("output/core.json", "w") as f:
+    f.write(json.dumps(core["nodes"]))
+
 print("Data Write Complete.")
 
 print("Core cnt: %d" % len(core["nodes"]))
-print(core["nodes"])
 
 nodecnt = sum([stat["nodes"][t] for t in stat["nodes"].keys()])
 edgecnt = sum([stat["edges"][t] for t in stat["edges"].keys()])
