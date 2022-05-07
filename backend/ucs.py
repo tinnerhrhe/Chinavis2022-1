@@ -171,7 +171,7 @@ def ucs(node_str, node_limit, edge_limit):
 
             qidx = findkey(q, cur_tail)
 
-            cur_link_priority = link_priority[x["relation"]]  # ground truth
+            cur_link_priority = link_priority[cur_link_relation]  # ground truth
 
             flag = False
 
