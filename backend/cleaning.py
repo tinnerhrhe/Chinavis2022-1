@@ -1,4 +1,4 @@
-from priority import *
+from meta import *
 import pandas as pd
 
 node = pd.read_csv('data/Node.csv')
