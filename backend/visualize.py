@@ -49,9 +49,8 @@ def generate(*args):
 
     nodes = {}
     cton = {}
-    ntoc = {}
     edges = {}
-    node_side_num = math.sqrt(node_limit) + 1
+    node_side_num = int(math.sqrt(node_limit)) + 1
     BANDWIDTH = int((WIDTH - PADDING * 2) / (node_side_num - 1))
     BANDHEIGHT = int((HEIGHT - PADDING * 2) / (node_side_num - 1))
     R = 5
@@ -66,13 +65,50 @@ def generate(*args):
         cid = c.find_closest(event.x, event.y)[0]
         coreid = cton[cid]
 
+        subgraph = copy.deepcopy(search.subgraph)
+        corenodes = copy.deepcopy(search.corenodes)
+        pathucs = pathUCS(Graph(subgraph.getNodes(),subgraph.getEdges()))
+        pathucs.path_run(coreid, corenodes)
+
+        def showpath(event):
+            c.delete('cpath')
+            cid = c.find_closest(event.x, event.y)[0]
+            coreid = cton[cid]
+            tEdges = pathucs.targetPaths[coreid]
+            for eid in tEdges:
+                e = edges[eid]
+                sourcepos = position(nodes[e[0]])
+                targetpos = position(nodes[e[1]])
+                c.create_line(sourcepos[0], sourcepos[1], targetpos[0], targetpos[1], fill='red', width=3, tags='cpath')
+
+        def rmcritical(event):
+            c.delete('cpath')
+            c.delete('critical')
+
+        for eid in pathucs.visitedEdges:
+            e = edges[eid]
+            sourcepos = position(nodes[e[0]])
+            targetpos = position(nodes[e[1]])
+            c.create_line(sourcepos[0], sourcepos[1], targetpos[0], targetpos[1], fill='red', width=2, tags='critical')
+
+        pos = position(nodes[coreid])
+        coreobj = c.create_oval(pos[0] - R, pos[1] - R, pos[0] + R, pos[1] + R, fill='yellow',tags='critical')
+        c.tag_bind(coreobj, '<Button-1>', func=rmcritical)
+        
+        for corenode in pathucs.targetPaths.keys():
+            pos = position(nodes[corenode])
+            coreobj = c.create_oval(pos[0] - R, pos[1] - R, pos[0] + R, pos[1] + R, fill='red',tags='critical')
+            c.tag_bind(coreobj, '<Button-1>', func=showpath)
+            cton[coreobj] = corenode
+
+
     def vis_node_search(node: Node):
         curid = node.node_id
         progressNode['value'] = search.node_limit
         labelNode['text'] = curid
         cnt = node_limit - search.node_limit - 1 # start from 0
         loc = [math.floor(cnt / node_side_num), cnt % node_side_num]
-        nodes[curid] = loc
+        nodes[str(curid)] = loc
         pos = position(loc)
         if node.iscore:
             cid = c.create_oval(pos[0] - R, pos[1] - R, pos[0] + R, pos[1] + R, fill='blue')
@@ -82,7 +118,7 @@ def generate(*args):
     def vis_edge_search(e, curnode):
         progressEdge['value'] = search.edge_limit
         labelEdge['text'] = e['id']
-        edges[e['id']] = [e['source'], e['target']]
+        edges[str(e['id'])] = [e['source'], e['target']]
         sourcepos = position(nodes[e['source']])
         targetpos = position(nodes[e['target']])
         c.create_line(sourcepos[0], sourcepos[1], targetpos[0], targetpos[1])
