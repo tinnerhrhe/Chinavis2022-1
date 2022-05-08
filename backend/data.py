@@ -6,6 +6,8 @@ import math
 
 ########## 加载数据 ##########
 
+print("Loading Data...")
+
 node = pd.read_csv("data/Node.csv")
 link = pd.read_csv("data/Link.csv")
 link["id"] = link.index
