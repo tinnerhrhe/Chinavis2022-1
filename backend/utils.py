@@ -31,7 +31,7 @@ link_priority = {
     'r_asn': 4,             # 较弱
     'r_cidr': 4
 }
-def d_weight(type, index, industry):
+def d_weight(type):
     weight = {
         'r_cert': 18,  # 很强
         'r_subdomain': 1,
@@ -46,10 +46,10 @@ def d_weight(type, index, industry):
         'r_cidr': 0
     }
     if type == 'r_subdomain' or type == 'r_request_jump':
-        return weight[type] * (1 if industry[index] else 0.5)
+        return weight[type]
     else:
         return weight[type]
-def ip_weight(type, index, industry):
+def ip_weight(type):
     weight = {
         'r_cert': 0,  # 很强
         'r_subdomain': 0,
@@ -64,10 +64,10 @@ def ip_weight(type, index, industry):
         'r_cidr': 0.01
     }
     if type == 'r_dns_a':
-        return weight[type] * (1 if industry[index] else 0.5)
+        return weight[type]
     else:
         return weight[type]
-def c_weight(type, index, industry):
+def c_weight(type):
     weight = {
         'r_cert': 1,  # 很强
         'r_subdomain': 0,
@@ -82,8 +82,6 @@ def c_weight(type, index, industry):
         'r_cidr': 0
     }
     if type == 'r_cert':
-        return weight[type] * (1 if industry[index] else 0.5)
+        return weight[type]
     else:
         return weight[type]
-def d_score(index, scores):
-    return scores
