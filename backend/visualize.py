@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from meta import *
 from ucs import *
+import copy
 
 root = Tk()
 
@@ -47,6 +48,8 @@ def generate(*args):
     progressEdge['maximum'] = net_limit[limitation]['edge']
 
     nodes = {}
+    cton = {}
+    ntoc = {}
     edges = {}
     node_side_num = math.sqrt(node_limit) + 1
     BANDWIDTH = int((WIDTH - PADDING * 2) / (node_side_num - 1))
@@ -59,17 +62,27 @@ def generate(*args):
             PADDING + coord[1] * BANDHEIGHT
         ]
     
+    def minepaths(event):
+        cid = c.find_closest(event.x, event.y)[0]
+        coreid = cton[cid]
+
     def vis_node_search(node: Node):
+        curid = node.node_id
         progressNode['value'] = search.node_limit
-        labelNode['text'] = node.node_id
+        labelNode['text'] = curid
         cnt = node_limit - search.node_limit - 1 # start from 0
-        nodes[node.node_id] = [math.floor(cnt / node_side_num), cnt % node_side_num]
-        pos = position(nodes[node.node_id])
-        c.create_oval(pos[0] - R, pos[1] - R, pos[0] + R, pos[1] + R, fill='blue' if node.iscore else 'white')
+        loc = [math.floor(cnt / node_side_num), cnt % node_side_num]
+        nodes[curid] = loc
+        pos = position(loc)
+        if node.iscore:
+            cid = c.create_oval(pos[0] - R, pos[1] - R, pos[0] + R, pos[1] + R, fill='blue')
+        else:
+            cid = c.create_oval(pos[0] - R, pos[1] - R, pos[0] + R, pos[1] + R)
         root.update()
     def vis_edge_search(e, curnode):
         progressEdge['value'] = search.edge_limit
         labelEdge['text'] = e['id']
+        edges[e['id']] = [e['source'], e['target']]
         sourcepos = position(nodes[e['source']])
         targetpos = position(nodes[e['target']])
         c.create_line(sourcepos[0], sourcepos[1], targetpos[0], targetpos[1])
@@ -78,6 +91,12 @@ def generate(*args):
     search.search_run(node_id)
     labelNode['text'] = 'Node'
     labelEdge['text'] = 'Edge'
+    cton = {}
+    for corenode in search.corenodes:
+        pos = position(nodes[corenode])
+        coreobj = c.create_oval(pos[0] - R, pos[1] - R, pos[0] + R, pos[1] + R, fill='blue',tags=(corenode))
+        c.tag_bind(coreobj, '<Button-1>', func=minepaths)
+        cton[coreobj] = corenode
 
 buttonGen = Button(root, text='Generate')
 buttonGen.bind('<Button-1>', generate)
