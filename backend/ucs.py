@@ -3,8 +3,13 @@ import heapq
 
 # 一致代价搜索 Uniform Cost Search
 class UCS:
-    def __init__(self, graph):
+    def __init__(self, graph, vis_node=None, vis_edge=None):
         self.graph = graph
+        
+        if vis_node is not None:
+            self.vis_node = vis_node
+        if vis_edge is not None:
+            self.vis_edge = vis_edge
 
     def get_neighbors(self, node: Node):
         raise NotImplementedError()
@@ -14,6 +19,12 @@ class UCS:
 
     def add_edge(self, e, curnode):
         raise NotImplementedError()
+
+    def vis_node(self, node: Node):
+        pass
+    
+    def vis_edge(self, e, curnode):
+        pass
 
     # 在优先级队列中寻找键
     def findkey(self, pq, key):
@@ -25,7 +36,8 @@ class UCS:
     # 运行 UCS
     def run(self, q):
 
-        explored = set()
+        explored = set()   # 是否被扩展
+        visited = set()    # 是否被访问
 
         while len(q) > 0:
             top = heapq.heappop(q)
@@ -35,10 +47,11 @@ class UCS:
 
             neighbors = self.get_neighbors(top_node)
 
-            if top_id not in explored:
+            if top_id not in visited:
+                visited.add(top_id)
                 if self.add_node(top_node):
                     return  # 满足条件终止搜索
-
+            
             explored.add(top_id)
 
             # 限制深度
@@ -51,20 +64,29 @@ class UCS:
                 priority = link_priority[e["relation"]]
                 qidx = self.findkey(q, neighbor)
 
+                flag = False
                 if neighbor not in explored and qidx == -1:
                     priority = max(priority, max_priority)
                     heapq.heappush(q, [priority, neighbor])
-                    if self.add_edge(e, top_id):
-                        return
+                    flag = True
                 elif qidx > -1 and priority < q[qidx][0]:
                     q[qidx][0] = priority
                     heapq.heapify(q)
+                    flag = True
+                
+                if flag:
+                    if neighbor not in visited:  # 被访问
+                        neighbor_node = Node(self.graph, neighbor)
+                        self.get_neighbors(neighbor_node)  # 需要判别是否是核心节点
+                        visited.add(neighbor)
+                        if self.add_node(neighbor_node):
+                            return
                     if self.add_edge(e, top_id):
                         return
 
 
 class searchUCS(UCS):
-    def __init__(self, graph, limitation):
+    def __init__(self, graph, limitation, vis_node=None, vis_edge=None):
         self.node_limit = limitation["node"]
         self.edge_limit = limitation["edge"]
         self.subgraph = Subgraph()
@@ -74,7 +96,7 @@ class searchUCS(UCS):
         self.default_style = {}
         self.core_style = {"fill": "blue"}
 
-        super().__init__(graph)
+        super().__init__(graph, vis_node, vis_edge)
 
     def get_neighbors(self, node: Node):
         if node.label == "IP" or node.label == "Cert":
@@ -91,6 +113,7 @@ class searchUCS(UCS):
         return toRecords(neighbors)
 
     def add_node(self, node: Node):
+
         # cut off
         if self.node_limit == 0:
             return True
@@ -110,14 +133,17 @@ class searchUCS(UCS):
                     "style": self.core_style,
                 }
             )
+            self.vis_node(node)
         else:
             self.subgraph.addNode(
                 {"id": node.node_id, "label": node.label, "style": self.default_style}
             )
+            self.vis_node(node)
 
         return False
 
     def add_edge(self, e, curnode):
+
         if e["relation"] not in self.statdata["edges"].keys():
             self.statdata["edges"][e["relation"]] = 1
         else:
@@ -131,8 +157,9 @@ class searchUCS(UCS):
                 "label": e["relation"],
             }
         )
-
+        
         self.edge_limit -= 1
+        self.vis_edge(e, curnode)
         if self.edge_limit == 0:
             return True
         return False
@@ -143,11 +170,11 @@ class searchUCS(UCS):
 
 
 class pathUCS(UCS):
-    def __init__(self, graph):
+    def __init__(self, graph, vis_node=None, vis_edge=None):
         # Critical Path cannot be longer than 4
         self.DEPTH_LIMIT = 4
 
-        super().__init__(graph)
+        super().__init__(graph, vis_node, vis_edge)
 
     def get_neighbors(self, node: Node):
         return toRecords(node.queryNeighbors())
@@ -171,12 +198,14 @@ class pathUCS(UCS):
                     self.visitedEdges.add(edgeid)
                 self.targetPaths[node.node_id] = tpath
                 print("%s: %s" % (node.node_id, str(tpath)))
+                self.vis_node(node)
 
         return len(self.targets) == 0
 
     def add_edge(self, e, curnode):
         neighbor = e["target"] if e["source"] == curnode else e["source"]
         self.edge_to[neighbor] = {"id": e["id"], "prev": curnode}
+        self.vis_edge(e, curnode)
 
     def path_run(self, node_id, subset):
         self.source = node_id
