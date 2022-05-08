@@ -5,11 +5,8 @@ import heapq
 class UCS:
     def __init__(self, graph, vis_node=None, vis_edge=None):
         self.graph = graph
-        
-        if vis_node is not None:
-            self.vis_node = vis_node
-        if vis_edge is not None:
-            self.vis_edge = vis_edge
+        self.vis_node = vis_node
+        self.vis_edge = vis_edge
 
     def get_neighbors(self, node: Node):
         raise NotImplementedError()
@@ -75,7 +72,7 @@ class UCS:
                     flag = True
                 
                 if flag:
-                    if neighbor not in visited:  # 被访问
+                    if self.vis_node is not None and neighbor not in visited:  # 被访问
                         neighbor_node = Node(self.graph, neighbor)
                         self.get_neighbors(neighbor_node)  # 需要判别是否是核心节点
                         visited.add(neighbor)
@@ -133,12 +130,14 @@ class searchUCS(UCS):
                     "style": self.core_style,
                 }
             )
-            self.vis_node(node)
+            if self.vis_node is not None:
+                self.vis_node(node)
         else:
             self.subgraph.addNode(
                 {"id": node.node_id, "label": node.label, "style": self.default_style}
             )
-            self.vis_node(node)
+            if self.vis_node is not None:
+                self.vis_node(node)
 
         return False
 
@@ -159,7 +158,8 @@ class searchUCS(UCS):
         )
         
         self.edge_limit -= 1
-        self.vis_edge(e, curnode)
+        if self.vis_edge is not None:
+            self.vis_edge(e, curnode)
         if self.edge_limit == 0:
             return True
         return False
@@ -198,14 +198,16 @@ class pathUCS(UCS):
                     self.visitedEdges.add(edgeid)
                 self.targetPaths[node.node_id] = tpath
                 print("%s: %s" % (node.node_id, str(tpath)))
-                self.vis_node(node)
+                if self.vis_node is not None:
+                    self.vis_node(node)
 
         return len(self.targets) == 0
 
     def add_edge(self, e, curnode):
         neighbor = e["target"] if e["source"] == curnode else e["source"]
         self.edge_to[neighbor] = {"id": e["id"], "prev": curnode}
-        self.vis_edge(e, curnode)
+        if self.vis_edge is not None:
+            self.vis_edge(e, curnode)
 
     def path_run(self, node_id, subset):
         self.source = node_id
