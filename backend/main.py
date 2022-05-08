@@ -17,6 +17,8 @@ with open("output/graph.json", "w") as f:
     f.write(json.dumps(outputgraph))
 
 corenodes = copy.deepcopy(search.corenodes)
+with open("output/core.json", "w") as f:
+    f.write(json.dumps(corenodes))
 
 print("Core cnt: %d" % len(corenodes))
 
@@ -25,7 +27,11 @@ nodecnt = sum([stat["nodes"][t] for t in stat["nodes"].keys()])
 edgecnt = sum([stat["edges"][t] for t in stat["edges"].keys()])
 print("Node cnt: %d" % nodecnt)
 print("Edge cnt: %d" % edgecnt)
+with open("output/stat.json", "w") as f:
+    f.write(json.dumps(stat))
 
 pathtracing = pathUCS(Graph(subgraph.getNodes(), subgraph.getEdges()))
 pathtracing.path_run(corenodes[1], corenodes)
 
+with open("output/path.json", "w") as f:
+    f.write(json.dumps(pathtracing.targetPaths))
