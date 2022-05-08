@@ -2,12 +2,52 @@ import numpy as np
 import os
 import pandas as pd
 from utils import *
+import time
 #feature: 1.number of weighted neighbors(all types) 2. rules for elimination
 # 3.(possible) consider jumps and corresponding neighbors
 # method: record and iterate scores
+domain_weight = {
+    'r_cert': 18,            # 很强
+    'r_subdomain': 1,
+    'r_request_jump': 2,
+    'r_dns_a': 10,
+    'r_whois_name': 0.1,      # 较强
+    'r_whois_email': 0.1,
+    'r_whois_phone': 0.1,
+    'r_cert_chain': 0,      # 一般
+    'r_cname': 0.02,
+    'r_asn': 0,             # 较弱
+    'r_cidr': 0
+}
+ip_weight = {
+    'r_cert': 0,            # 很强
+    'r_subdomain': 0,
+    'r_request_jump': 0,
+    'r_dns_a': 1,
+    'r_whois_name': 0,      # 较强
+    'r_whois_email': 0,
+    'r_whois_phone': 0,
+    'r_cert_chain': 0,      # 一般
+    'r_cname': 0,
+    'r_asn': 0.01,             # 较弱
+    'r_cidr': 0.01
+}
+cert_weight = {
+    'r_cert': 1,            # 很强
+    'r_subdomain': 0,
+    'r_request_jump': 0,
+    'r_dns_a': 0,
+    'r_whois_name': 0,      # 较强
+    'r_whois_email': 0,
+    'r_whois_phone': 0,
+    'r_cert_chain': 0.1,      # 一般
+    'r_cname': 0,
+    'r_asn': 0,             # 较弱
+    'r_cidr': 0
+}
 def process_data():
-    node = pd.read_csv('data/Node.csv')
-    link = pd.read_csv('data/Link.csv')
+    node = pd.read_csv('data/Nodefil.csv')
+    link = pd.read_csv('data/Linkfil.csv')
     # select data without nan
     node = node.dropna()
     node = node.drop_duplicates('id', keep='first')
@@ -17,47 +57,47 @@ def process_data():
     #type = np.array(type_value[node['type'][i]] for i in range(node.shape[0]))
     industry = np.array(0 if node['industry'][i] == '[]' else 1 for i in range(node.shape[0]))
     scores = []
+    scores_dict={}
     domains = []
-    for i, s in enumerate(node['id']):
+    new_node = node[(node['industry'] != '[]') |
+                    (node['type'] != 'Domain')]
+    t = time.time()
+    for i, node_row in new_node.iterrows():
         score = 0
         ips = 0
-        for j, t in enumerate(link['source']):
-            if s == t:
-                type = link.iloc[j, 0]
-                if s == 'Domain':
-                    if type == 'r_dns_a':
-                        ips += 1
-                    score += d_weight(type, i, industry)
-                elif s == 'IP':
-                    score += ip_weight(type, i, industry)
-                elif s == 'cert':
-                    score += c_weight(type, i, industry)
-            if s == link.iloc[j, 2]:
-                type = link.iloc[j, 0]
-                if s == 'IP':
-                    score += ip_weight(type, i, industry)
-                elif s == 'cert':
-                    score += c_weight(type, i, industry)
+        for j, link_row in link[(link['source'] == node_row['id']) | (link['target'] == node_row['id'])].iterrows():
+            type = link_row['relation']
+            if node_row['type'] == 'Domain':
+                if type == 'r_dns_a':
+                    ips += 1
+                score += domain_weight[type]
+            elif node_row['type'] == 'IP':
+                score += ip_weight[type]
+            elif node_row['type'] == 'Cert':
+                score += cert_weight[type]
         if ips > 1:
             domains.append(i)
         if scores == 0:
-            scores = value[s]
+            scores = value[node_row['type']]
         scores.append(score)
-    np.save('data/score_1.npy', np.array(scores))
+        scores_dict[node_row['id']] = score
+        #print(scores)
+        if i % 5e4 == 0:
+            print(time.time()-t)
+    np.save('data/score_1_fil.npy', np.array(scores))
     scores_2 = []
-    for i, s in enumerate(node['id']):
+    t = time.time()
+    for i, node_row in new_node.iterrows():
         score = 0
-        for j, t in enumerate(link['source']):
-            if s == t:
-                if s == 'Domain':
-                    score += scores[node[node['id'] == link.iloc[j, 2]].index.values]
-            if s == link.iloc[j, 'target']:
-                if s == 'IP':
-                    score += scores[node[node['id'] == link.iloc[j, 1]].index.values]
-                elif s == 'cert':
-                    score += scores[node[node['id'] == link.iloc[j, 1]].index.values]
+        if node_row['type'] == 'IP' or node_row['type'] == 'Cert':
+            for j, link_row in link[link['target'] == node_row['id']].iterrows():
+                score += scores_dict[link_row['source']] if link_row['source'] in scores_dict else 0
+        elif node_row['type'] == 'Domain':
+            for j, link_row in link[link['source'] == node_row['id']].iterrows():
+                score += scores_dict[link_row['target']] if link_row['target'] in scores_dict else 0
         scores_2.append(score)
-    np.save('data/score_2.npy', np.array(scores_2))
-
+        if i % 5e4 == 0:
+            print(time.time()-t)
+    np.save('data/score_2_fil.npy', np.array(scores_2))
 if __name__ == '__main__':
     process_data()
