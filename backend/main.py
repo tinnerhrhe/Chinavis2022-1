@@ -39,6 +39,6 @@ with open("output/path.json", "w") as f:
     f.write(json.dumps(pathtracing.targetPaths))
 
 with open("output/visitedPaths.json", "w") as f:
-    f.write(json.dumps(pathtracing.visitedEdges))
+    f.write(json.dumps(list(pathtracing.visitedEdges)))
 
 print("Path Search Complete.")
