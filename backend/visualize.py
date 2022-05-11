@@ -75,15 +75,19 @@ def generate(*args):
             cid = c.find_closest(event.x, event.y)[0]
             coreid = cton[cid]
             tEdges = pathucs.targetPaths[coreid]
+            labelNode['text'] = coreid
+            labelEdge['text'] = str(tEdges)
             for eid in tEdges:
                 e = edges[eid]
                 sourcepos = position(nodes[e[0]])
                 targetpos = position(nodes[e[1]])
-                c.create_line(sourcepos[0], sourcepos[1], targetpos[0], targetpos[1], fill='red', width=3, tags='cpath')
+                c.create_line(sourcepos[0], sourcepos[1], targetpos[0], targetpos[1], fill='purple', width=3, tags='cpath')
 
         def rmcritical(event):
             c.delete('cpath')
             c.delete('critical')
+            labelNode['text'] = 'Node'
+            labelEdge['text'] = 'Edge'
 
         for eid in pathucs.visitedEdges:
             e = edges[eid]
@@ -93,6 +97,7 @@ def generate(*args):
 
         pos = position(nodes[coreid])
         coreobj = c.create_oval(pos[0] - R, pos[1] - R, pos[0] + R, pos[1] + R, fill='yellow',tags='critical')
+        labelNode['text'] = coreid
         c.tag_bind(coreobj, '<Button-1>', func=rmcritical)
         
         for corenode in pathucs.targetPaths.keys():

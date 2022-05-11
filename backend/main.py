@@ -30,8 +30,15 @@ print("Edge cnt: %d" % edgecnt)
 with open("output/stat.json", "w") as f:
     f.write(json.dumps(stat))
 
+print("Path Searching...")
+
 pathtracing = pathUCS(Graph(subgraph.getNodes(), subgraph.getEdges()))
-pathtracing.path_run(corenodes[1], corenodes)
+pathtracing.path_run(corenodes[0], corenodes)
 
 with open("output/path.json", "w") as f:
     f.write(json.dumps(pathtracing.targetPaths))
+
+with open("output/visitedPaths.json", "w") as f:
+    f.write(json.dumps(pathtracing.visitedEdges))
+
+print("Path Search Complete.")

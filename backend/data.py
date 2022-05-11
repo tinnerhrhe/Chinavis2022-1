@@ -39,11 +39,13 @@ class Subgraph(Graph):
             pd.DataFrame(columns=["id", "source", "target", "label"]),
         )
 
+    # DataFrame.append() is deprecated.
+
     def addNode(self, n):
-        self.nodes = self.nodes.append(pd.Series(n), ignore_index=True)
+        self.nodes = pd.concat([self.nodes, pd.DataFrame.from_records([n])])
 
     def addEdge(self, e):
-        self.edges = self.edges.append(pd.Series(e), ignore_index=True)
+        self.edges = pd.concat([self.edges, pd.DataFrame.from_records([e])])
 
     def getNodes(self):
         return self.nodes.rename(columns={"label": "type"})
@@ -76,15 +78,14 @@ class Node:
 # group_filtered = log_{filter_threshold}^len(x)
 def filter(neighbors):
     if len(neighbors) > FILTER_THRESHOLD:
-        return (
-            neighbors.groupby(["relation"])
-            .apply(
-                lambda x: x.head(int(FILTER_BASE * math.log(len(x), FILTER_THRESHOLD)))
-                if len(x) > FILTER_THRESHOLD
-                else x.head(len(x))  # dummy trick, could be better.
-            )
-            .droplevel(0)
+        neighbors = neighbors.groupby(["relation"]).apply(
+            lambda x: x.head(int(FILTER_BASE * math.log(len(x), FILTER_THRESHOLD)))
+            if len(x) > FILTER_THRESHOLD
+            else x
         )
+        # dummy index drop
+        if isinstance(neighbors.index[0], tuple): neighbors = neighbors.droplevel(0)
+        return neighbors
     else:
         return neighbors
 
