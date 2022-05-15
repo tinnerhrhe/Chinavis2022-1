@@ -1,0 +1,229 @@
+body {
+  background-color: aliceblue;
+}
+
+.button-class {
+  /*left: 25px;*/
+  top: 10px;
+  width: 120px;
+  height: 35px;
+  background: linear-gradient(315deg, #89d8d3 0%, #03c8a8 74%);
+  border: none;
+  border-radius: 10px;
+  font-family: "Lato", sans-serif;
+  color: #fff;
+  outline: none;
+  position: relative;
+  z-index: 0;
+  cursor: pointer;
+}
+
+.button-class:hover {
+  /*left: 25px;*/
+  top: 10px;
+  width: 120px;
+  height: 35px;
+  background: linear-gradient(315deg, #6fd8d1 0%, #02aa8e 74%);
+  border: none;
+  border-radius: 10px;
+  font-family: "Lato", sans-serif;
+  color: #fff;
+  outline: none;
+  position: relative;
+  z-index: 0;
+  cursor: pointer;
+}
+
+.setting-setting-button-class {
+  left: 5px;
+  margin-right: 10px;
+  top: 6px;
+  width: 100px;
+  height: 40px;
+  background: linear-gradient(315deg, #f4a460 0%, #ffd6b3 99%);
+  border: none;
+  border-radius: 10px;
+  font-family: "Lato", sans-serif;
+  color: black;
+  outline: none;
+  position: relative;
+  z-index: 0;
+  cursor: pointer;
+}
+
+.setting-setting-button-class:hover {
+  left: 5px;
+  margin-right: 10px;
+  top: 6px;
+  width: 100px;
+  height: 40px;
+  background: linear-gradient(315deg, #e7944c 0%, #f5bd8d 99%);
+  border: none;
+  border-radius: 10px;
+  font-family: "Lato", sans-serif;
+  color: black;
+  outline: none;
+  position: relative;
+  z-index: 0;
+  cursor: pointer;
+}
+
+.select-class {
+  /*left: 8px;*/
+  top: 10px;
+  width: 160px;
+  height: 35px;
+  background: linear-gradient(315deg, #89d8d3 0%, #03c8a8 74%);
+  border: none;
+  border-radius: 10px;
+  font-family: "Lato", sans-serif;
+  color: black;
+  outline: none;
+  position: relative;
+  z-index: 4px;
+  cursor: pointer;
+}
+.common-select-class {
+  height: 25px;
+  background-color: #6fd8d1;
+  border: none;
+  border-radius: 7px;
+  font-family: "Lato", sans-serif;
+  outline: none;
+  position: relative;
+  z-index: 4px;
+  cursor: pointer;
+}
+.option-class {
+  /*background: linear-gradient(315deg, #89d8d3 0%, #03c8a8 74%);*/
+  height: 35px;
+  background-color: #6fd8d1;
+  text-align: center;
+  cursor: pointer;
+}
+
+.head-option-class {
+  height: 35px;
+  background-color: #6fd8d1;
+  text-align: center;
+  color: red;
+  cursor: pointer;
+}
+
+.left-div-class {
+  left: 3%;
+  top: 10%;
+  width: 180px;
+  height: 820px;
+  background-color: paleturquoise;
+  float: left;
+}
+
+.center-div-class {
+  float: left;
+  position: relative;
+  height: 820px;
+  width: 1200px;
+}
+
+.center-div-class .center-top-class {
+  float: left;
+  position: relative;
+  height: 160px;
+  width: 1200px;
+}
+
+.center-top-class .border-select-class {
+  width: 30px;
+  height: 130px;
+  border: none;
+  border-radius: 5px;
+  background-color: whitesmoke;
+  float: left;
+  position: relative;
+  cursor: pointer;
+  font-size: large;
+  font-weight: bold;
+}
+
+.border-select-class:hover {
+  background-color: gainsboro;
+}
+
+.explain-text-class {
+  font-family: "Comic Sans MS";
+  font-weight: bold;
+}
+
+.info-text-class {
+  font-size: small;
+}
+
+.chart-div-class {
+  width: 600px;
+  height: 400px;
+}
+
+.layer-class {
+  display: none;
+  background-color: #b3b3b3;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  -moz-opacity: 0.8;
+  opacity: 0.8;
+  filter: alpha(opacity=80);
+}
+
+.block-box-class {
+  display: none;
+  background-color: #ffffff;
+  z-index: 11;
+  width: 400px;
+  height: 500px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin: auto;
+  border: none;
+  border-radius: 10px;
+}
+
+.block-box-class .close-box-class {
+  text-align: right;
+  margin-right: 10px;
+  background-color: whitesmoke;
+}
+
+.block-box-class .close-box-class a {
+  text-decoration: solid;
+  color: dimgray;
+  height: 20px;
+  font-size: large;
+  cursor: pointer;
+}
+
+.setting-content-class {
+  background-color: azure;
+  top: 0;
+  left: 0;
+  width: 400px;
+  height: 400px;
+  float: left;
+  position: relative;
+}
+
+.setting-setting-class {
+  background-color: ivory;
+  top: 0;
+  left: 0;
+  width: 400px;
+  height: 80px;
+  float: left;
+  position: relative;
+}
