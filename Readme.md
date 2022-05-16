@@ -4,6 +4,14 @@
 
 Store `Link.csv` and `Node.csv` in `backend/data/`.
 
+### Get Started
+
+Start the server.
+```cmd
+cd backend
+python server.py
+```
+
 ### Run Backend Demo
 
 For script running,
