@@ -1,9 +1,21 @@
 from meta import *
 import pandas as pd
+import numpy as np
 
 node = pd.read_csv('data/Node.csv')
 
 link = pd.read_csv('data/Link.csv')
+
+node = node.dropna()
+node = node.drop_duplicates('id', keep='first')
+node = node[(node['industry'] != '[]') |
+                (node['type'] != 'Domain')]
+node = node.reset_index() #index和npy对应
+
+score = np.load('score.npy')
+score = pd.DataFrame(score, columns=['score'])
+scorednode = pd.concat([node, score], axis=1)
+scorednode.to_csv('data/scorednode.csv', index=False)
 
 # 可能的方法：
 

@@ -3,6 +3,8 @@
 
 import pandas as pd
 import math
+import os
+import numpy as np
 
 ########## 加载数据 ##########
 
@@ -11,6 +13,20 @@ print("Loading Data...")
 node = pd.read_csv("data/Node.csv")
 link = pd.read_csv("data/Link.csv")
 link["id"] = link.index
+
+# 生成打分后的节点数据表
+if os.path.isfile("data/scorednode.csv"):
+    scorednode = pd.read_csv("data/scorednode.csv")
+else:
+    scorednode = node.dropna()
+    scorednode = scorednode.drop_duplicates('id', keep='first')
+    scorednode = scorednode[(scorednode['industry'] != '[]') |
+                    (scorednode['type'] != 'Domain')]
+    scorednode = scorednode.reset_index() #index和npy对应
+    score = np.load('score.npy')
+    score = pd.DataFrame(score, columns=['score'])
+    scorednode = pd.concat([node, score], axis=1)
+    scorednode.to_csv('data/scorednode.csv', index=False)
 
 print("Load Data Complete.")
 
