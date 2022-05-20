@@ -106,8 +106,8 @@ class searchUCS(UCS):
             neighbors = node.queryChildren()
 
         before = len(neighbors)
-        node.iscore = coreasset(neighbors)
-        neighbors = filter(neighbors)
+        node.iscore = coreasset(node.node_id, neighbors)
+        neighbors = filter(node.node_id, neighbors)
         after = len(neighbors)
         print("%d" % before if before == after else "%d(%d)" % (before, after), end=" ")
 

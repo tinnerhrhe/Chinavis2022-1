@@ -16,8 +16,10 @@ link["id"] = link.index
 
 # 生成打分后的节点数据表
 if os.path.isfile("data/scorednode.csv"):
-    scorednode = pd.read_csv("data/scorednode.csv")
+    print("Use cached data/scorednode.csv")
+    scorednode = pd.read_csv("data/scorednode.csv", index_col='id')
 else:
+    print("Generating data/scorednode.csv")
     scorednode = node.dropna()
     scorednode = scorednode.drop_duplicates('id', keep='first')
     scorednode = scorednode[(scorednode['industry'] != '[]') |
@@ -26,7 +28,8 @@ else:
     score = np.load('score.npy')
     score = pd.DataFrame(score, columns=['score'])
     scorednode = pd.concat([node, score], axis=1)
-    scorednode.to_csv('data/scorednode.csv', index=False)
+    scorednode.set_index('id', inplace=True)
+    scorednode.to_csv('data/scorednode.csv')
 
 print("Load Data Complete.")
 
@@ -39,7 +42,7 @@ CORE_LIMIT = 6
 # 筛选同类型节点的底数
 FILTER_BASE = 20
 # 筛选阈值
-FILTER_THRESHOLD = 100
+FILTER_THRESHOLD = 50
 
 # 图：预期使用 pandas 存储
 class Graph:
@@ -92,7 +95,15 @@ class Node:
 # Filter the same nodes into a smaller number.
 # For stability concern, we use head() instead of sample()
 # group_filtered = log_{filter_threshold}^len(x)
-def filter(neighbors):
+def filter(curnode, neighbors):
+    # filter by scorednode for mining.
+    neighbors = neighbors[neighbors['source'].isin(scorednode.index) & neighbors['target'].isin(scorednode.index)]
+    if len(neighbors) == 0:
+        return neighbors[['id', 'relation', 'source', 'target']]
+    neighbors['neighbor'] = neighbors.apply(lambda x: x['source'] if x['target'] == curnode else x['target'], axis=1)
+    neighbors['score'] = neighbors['neighbor'].apply(lambda x: scorednode['score'][x])
+    neighbors = neighbors.sort_values(by='score', ascending=False)
+
     if len(neighbors) > FILTER_THRESHOLD:
         neighbors = neighbors.groupby(["relation"]).apply(
             lambda x: x.head(int(FILTER_BASE * math.log(len(x), FILTER_THRESHOLD)))
@@ -101,13 +112,13 @@ def filter(neighbors):
         )
         # dummy index drop
         if isinstance(neighbors.index[0], tuple): neighbors = neighbors.droplevel(0)
-        return neighbors
+        return neighbors[['id', 'relation', 'source', 'target']]
     else:
-        return neighbors
+        return neighbors[['id', 'relation', 'source', 'target']]
 
 
 # 是否是核心资产
-def coreasset(neighbors):
+def coreasset(curnode, neighbors):
     if len(neighbors) == 0:
         return False
     rel_cnt = neighbors.groupby(["relation"]).count()
