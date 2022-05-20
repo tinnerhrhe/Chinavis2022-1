@@ -43,6 +43,10 @@ CORE_LIMIT = 6
 FILTER_BASE = 20
 # 筛选阈值
 FILTER_THRESHOLD = 50
+# 核心节点打分应当为 5% 以内
+CORETOP = 5
+corescorethres = scorednode['score'].describe(percentiles=[(100 - CORETOP) / 100])[str(100 - CORETOP) + '%']
+print("Threshold Score for Core node is %.2f" % corescorethres)
 
 # 图：预期使用 pandas 存储
 class Graph:
@@ -129,6 +133,8 @@ def coreasset(curnode, neighbors):
     if "r_dns_a" in rel_cnt.index.values and rel_cnt["target"]["r_dns_a"] > 2:
         return False
     if len(neighbors) <= CORE_LIMIT:
+        return False
+    if scorednode['score'][curnode] < corescorethres:
         return False
     return True
 
