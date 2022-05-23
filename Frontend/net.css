@@ -114,7 +114,7 @@ body {
   left: 3%;
   top: 10%;
   width: 180px;
-  height: 820px;
+  height: 1000px;
   background-color: paleturquoise;
   float: left;
 }
@@ -122,15 +122,15 @@ body {
 .center-div-class {
   float: left;
   position: relative;
-  height: 820px;
-  width: 1200px;
+  height: 1000px;
+  width: 1300px;
 }
 
 .center-div-class .center-top-class {
   float: left;
   position: relative;
   height: 160px;
-  width: 1200px;
+  width: 1300px;
 }
 
 .center-top-class .border-select-class {
