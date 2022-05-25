@@ -176,7 +176,7 @@ function prevSelect() {
     console.log("Begin to plot..." + nextId);
     plotBarsPieGraph('right-bar-id','right-pie-id1','right-pie-id2',nextId);
 
-    ele_cap.innerHTML = '子图' + ele2.getAttribute('ImageId');
+    ele_cap.innerHTML = '子图' + nextId;
 }
 
 function nextSelect() {
@@ -201,5 +201,5 @@ function nextSelect() {
     console.log("Begin to plot..." + nextId);
     plotBarsPieGraph('right-bar-id','right-pie-id1','right-pie-id2',nextId);
 
-    ele_cap.innerHTML = '子图' + ele2.getAttribute('ImageId');
+    ele_cap.innerHTML = '子图' + nextId;
 }
