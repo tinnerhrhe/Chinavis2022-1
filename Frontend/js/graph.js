@@ -1541,7 +1541,7 @@ fetch('./output/graph.json')
     descriptionDiv.style.marginTop = '8px';
     container.appendChild(descriptionDiv);
 
-    container.style.backgroundColor = '#2b2f33';
+    container.style.backgroundColor = 'rgba(0,0,0,0.25)';
 
     CANVAS_WIDTH = container.scrollWidth;
     CANVAS_HEIGHT = (container.scrollHeight || 500) - 30;
