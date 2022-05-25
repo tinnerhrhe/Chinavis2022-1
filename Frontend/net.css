@@ -1,5 +1,14 @@
 body {
-  background-color: aliceblue;
+  background-image: url('pics/bg.jpg');
+  color: white;
+}
+
+.center-top-class {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 10px;
+  align-items: center;
 }
 
 .button-class {
@@ -134,8 +143,8 @@ body {
 }
 
 .center-top-class .border-select-class {
-  width: 30px;
-  height: 130px;
+  width: 90%;
+  height: 30px;
   border: none;
   border-radius: 5px;
   background-color: whitesmoke;
