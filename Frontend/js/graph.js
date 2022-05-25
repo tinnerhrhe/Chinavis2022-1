@@ -4,7 +4,8 @@ core.json?graphid={graphId}
 path.json?graphid={graphId}
 */
 function getJsonAndPlot(graphId) {
-    var reqStr = "graph.json?graphid=" + graphId;
+    var reqStr = "./output/graph.json";
+    //var reqStr = "graph.json?graphid=" + graphId;
     var xmlHttp = null;
     if (window.ActiveXObject) {
         xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
@@ -148,7 +149,6 @@ function plotGraph(remoteData) {
           './output/graph.json',
         );
         const remoteData = await response.json();
-
         const nodes = remoteData.nodes;
         const edges = remoteData.edges;
         */
@@ -1339,7 +1339,6 @@ const cacheNodePositions = (nodes) => {
   //import { useState, useEffect, useRef} from 'http://unpkg.com/preact/hooks/dist/hooks.module.js?module';
   /*
   const container = React.useRef<HTMLDivElement>(null);
-
   const [fisheyeEnabled, setFisheyeEnabled] = useState(false);
   const [lassoEnabled, setLassoEnabled] = useState(false);
   const [edgeLabelVisible, setEdgeLabelVisible] = useState(false);
@@ -1533,9 +1532,8 @@ fetch('./output/graph.json')
   .then((data) => {
     const container = document.getElementById('container');
     const descriptionDiv = document.createElement('div');
-    descriptionDiv.innerHTML = `<a href='/en/largegraph' target='_blanck'>Click【HERE】To Full Demo</a>
-      <br/>
-     <a href='/zh/largegraph' target='_blanck'>点击【这里】进入完整 Demo</a>`;
+      descriptionDiv.innerHTML = ``;
+      // <a href='/en/largegraph' target='_blanck'>Click【HERE】To Full Demo</a><br/><a href='/zh/largegraph' target='_blanck'>点击【这里】进入完整 Demo</a>
     descriptionDiv.style.textAlign = 'right';
     descriptionDiv.style.color = '#fff';
     descriptionDiv.style.position = 'absolute';

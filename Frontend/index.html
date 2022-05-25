@@ -169,22 +169,24 @@
                 <button class="border-select-class" style="left: 840px;" onclick="nextSelect()">></button>
                 <br />
                 <scan>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</scan>
-                <scan id="select-scan-id">子图1</scan>
+                <scan id="select-scan-id">子图1</scan><br />
             </p>
         </div>
-        <div style="width: 900px; height: 840px; position: relative; float: left;">
+        <div id="container" style="width: 900px; height: 840px; top: 20px; left: 20px; right: 20px; position: relative; float: left;">
+            <!--
             <p style="text-align: center;">
                 <img src="./pics/test2.png" height="800" width="900">
             </p>
+            -->
         </div>
 
         <!--右侧图表-->
         <div style="width: 400px; height: 840px; position: relative; float: left;">
-            <div id="right-bar-id" style="width: 370px; height: 260px; left: 20px; top: 10px; position: relative; float: left;">
+            <div id="right-bar-id" style="width: 370px; height: 260px; left: 40px; top: 10px; position: relative; float: left;">
             </div>
-            <div id="right-pie-id1" style="width: 370px; height: 290px; left: 20px; top: 5px; position: relative; float: left;">
+            <div id="right-pie-id1" style="width: 370px; height: 290px; left: 40px; top: 5px; position: relative; float: left;">
             </div>
-            <div id="right-pie-id2" style="width: 370px; height: 290px; left: 20px; top: 5px; position: relative; float: left;">
+            <div id="right-pie-id2" style="width: 370px; height: 290px; left: 40px; top: 5px; position: relative; float: left;">
             </div>
         </div>
         
@@ -192,9 +194,12 @@
     
     <script type="text/javascript" src="./js/PlotCharts.js"></script>
     <script type="text/javascript" src="./js/SettingBlock.js"></script>
+    <script type="text/javascript" src="./js/graph.js"></script>
     <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
+    <script type="text/javascript" src="https://gw.alipayobjects.com/os/lib/antv/g6/4.3.11/dist/g6.min.js"></script>
     <script type="text/javascript">
         initAll();
         plotBarsPieGraph('right-bar-id','right-pie-id1','right-pie-id2',1);
+        plotGraph("");
     </script>
 </body>
