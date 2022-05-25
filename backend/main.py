@@ -2,43 +2,52 @@ from ucs import *
 import json
 import copy
 
-search = searchUCS(Graph(node, link), net_limit["small"])
+# Cache Data for displaying
 
-search.search_run("IP_7e730b193c2496fc908086e8c44fc2dbbf7766e599fabde86a4bcb6afdaad66e")
+for i in range(len(evidence)):
+    source = evidence[i][0]
+    limitation = evidence[i][1]
+    cachedir = 'output/' + str(i)
+    if not os.path.isdir(cachedir):
+        os.mkdir(cachedir)
 
-print("Search Complete.")
+    search = searchUCS(Graph(node, link), net_limit[limitation])
 
-subgraph = copy.deepcopy(search.subgraph)
-with open("output/graph.json", "w") as f:
-    outputgraph = {
-        "nodes": toRecords(subgraph.nodes),
-        "edges": toRecords(subgraph.edges),
-    }
-    f.write(json.dumps(outputgraph))
+    search.search_run(source)
 
-corenodes = copy.deepcopy(search.corenodes)
-with open("output/core.json", "w") as f:
-    f.write(json.dumps(corenodes))
+    print("Search Complete.")
 
-print("Core cnt: %d" % len(corenodes))
+    subgraph = copy.deepcopy(search.subgraph)
+    with open("output/graph.json", "w") as f:
+        outputgraph = {
+            "nodes": toRecords(subgraph.nodes),
+            "edges": toRecords(subgraph.edges),
+        }
+        f.write(json.dumps(outputgraph))
 
-stat = search.statdata
-nodecnt = sum([stat["nodes"][t] for t in stat["nodes"].keys()])
-edgecnt = sum([stat["edges"][t] for t in stat["edges"].keys()])
-print("Node cnt: %d" % nodecnt)
-print("Edge cnt: %d" % edgecnt)
-with open("output/stat.json", "w") as f:
-    f.write(json.dumps(stat))
+    corenodes = copy.deepcopy(search.corenodes)
+    with open(cachedir + "/core.json", "w") as f:
+        f.write(json.dumps(corenodes))
 
-print("Path Searching...")
+    print("Core cnt: %d" % len(corenodes))
 
-pathtracing = pathUCS(Graph(subgraph.getNodes(), subgraph.getEdges()))
-pathtracing.path_run(corenodes[0], corenodes)
+    stat = search.statdata
+    nodecnt = sum([stat["nodes"][t] for t in stat["nodes"].keys()])
+    edgecnt = sum([stat["edges"][t] for t in stat["edges"].keys()])
+    print("Node cnt: %d" % nodecnt)
+    print("Edge cnt: %d" % edgecnt)
+    with open(cachedir + "/stat.json", "w") as f:
+        f.write(json.dumps(stat))
 
-with open("output/path.json", "w") as f:
-    f.write(json.dumps(pathtracing.targetPaths))
+    print("Path Searching...")
 
-with open("output/visitedPaths.json", "w") as f:
-    f.write(json.dumps(list(pathtracing.visitedEdges)))
+    pathtracing = pathUCS(Graph(subgraph.getNodes(), subgraph.getEdges()))
+    pathtracing.path_run(corenodes[0], corenodes)
 
-print("Path Search Complete.")
+    with open(cachedir + "/path.json", "w") as f:
+        f.write(json.dumps(pathtracing.targetPaths))
+
+    with open(cachedir + "/visitedPaths.json", "w") as f:
+        f.write(json.dumps(list(pathtracing.visitedEdges)))
+
+    print("Path Search Complete.")
