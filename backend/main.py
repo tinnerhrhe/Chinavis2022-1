@@ -41,13 +41,14 @@ for i in range(len(evidence)):
 
     print("Path Searching...")
 
-    pathtracing = pathUCS(Graph(subgraph.getNodes(), subgraph.getEdges()))
-    pathtracing.path_run(corenodes[0], corenodes)
+    for corenode in corenodes:
+        pathtracing = pathUCS(Graph(subgraph.getNodes(), subgraph.getEdges()))
+        pathtracing.path_run(corenode, corenodes)
 
-    with open(cachedir + "/path.json", "w") as f:
-        f.write(json.dumps(pathtracing.targetPaths))
+        with open(cachedir + "/path-" + corenode + ".json", "w") as f:
+            f.write(json.dumps(pathtracing.targetPaths))
 
-    with open(cachedir + "/visitedPaths.json", "w") as f:
-        f.write(json.dumps(list(pathtracing.visitedEdges)))
+        with open(cachedir + "/visitedPaths-" + corenode + ".json", "w") as f:
+            f.write(json.dumps(list(pathtracing.visitedEdges)))
 
     print("Path Search Complete.")
