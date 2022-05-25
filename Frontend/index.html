@@ -18,164 +18,166 @@
 </head>
 
 <body>
-    <h2 align="center">网络灰产分析--子图展示</h2>
-    <div class="left-div-class">
-        <p align="center" class="explain-text-class">
-            <scan>设置 & 选择</scan>
+    <h2>网络灰产分析</h2>
+    <div class="main">
+        <div class="left-div-class">
+            <p align="center" class="explain-text-class">
+                <scan>设置 & 选择</scan>
 
-            <!--左侧选择栏：选择问题1 or 问题2-->
-            <select class="select-class" id="select1-id">
-                <option value="0" class="head-option-class">请选择所要展示的内容</option>
-                <option value="1" class="option-class">Base</option>
-                <option value="2" class="option-class">Challenge</option>
-            </select><br /><br />
+                <!--左侧选择栏：选择问题1 or 问题2-->
+                <select class="select-class" id="select1-id">
+                    <option value="0" class="head-option-class">请选择所要展示的内容</option>
+                    <option value="1" class="option-class">Base</option>
+                    <option value="2" class="option-class">Challenge</option>
+                </select><br /><br />
 
-            <!--按钮选择-->
-            <button class="button-class" onclick="showSettingBlock('div-layer-id','div-box-id')"
-                id="setting-button-id">设置</button><br /><br />
-            <button class="button-class" onclick="">展示</button><br /><br />
-            <button class="button-class" onclick="">...</button><br /><br />
-            <button class="button-class" onclick="">...</button><br /><br />
-        </p>
-        <hr />
-        
-        <!--设置按钮弹出框-->
-        <div id="div-layer-id" class="layer-class"></div>
-        <div id="div-box-id" class="block-box-class">
-            <div class="close-box-class">
-                <a onclick="closeSettingBlock('div-layer-id','div-box-id')">×</a>
-            </div>
+                <!--按钮选择-->
+                <button class="button-class" onclick="showSettingBlock('div-layer-id','div-box-id')"
+                    id="setting-button-id">设置</button><br /><br />
+                <button class="button-class" onclick="">展示</button><br /><br />
+                <button class="button-class" onclick="">...</button><br /><br />
+                <button class="button-class" onclick="">...</button><br /><br />
+            </p>
+            <hr />
             
-            <div class="setting-content-class">
-                <p style="text-align: center;font-weight: bold;font-size: large;">
-                    <scan>设置</scan>
-                </p>
-                <div style="left: 10px;position: relative;float: left;">
-                    <p style="font-size: small;">请选择子图展示方式（默认只显示关键结点）</p>
-                    <select class="common-select-class" id="inner-select1">
-                        <option value="0" class="head-option-class">默认</option>
-                        <option value="1" class="option-class">仅展示关键结点</option>
-                        <option value="2" class="option-class">展示关键结点和关键链路</option>
-                        <option value="3" class="option-class">一次性展示所有内容</option>
-                        <option value="2" class="option-class">自主点选展示</option>
-                    </select>
-                    
-                    <p style="font-size: small;">...</p>
-                    <select class="common-select-class" id="inner-select2">
-                        <option value="0" class="head-option-class">默认</option>
-                        <option value="1" class="option-class">...</option>
-                    </select><br />
+            <!--设置按钮弹出框-->
+            <div id="div-layer-id" class="layer-class"></div>
+            <div id="div-box-id" class="block-box-class">
+                <div class="close-box-class">
+                    <a onclick="closeSettingBlock('div-layer-id','div-box-id')">×</a>
+                </div>
+                
+                <div class="setting-content-class">
+                    <p style="text-align: center;font-weight: bold;font-size: large;">
+                        <scan>设置</scan>
+                    </p>
+                    <div style="left: 10px;position: relative;float: left;">
+                        <p style="font-size: small;">请选择子图展示方式（默认只显示关键结点）</p>
+                        <select class="common-select-class" id="inner-select1">
+                            <option value="0" class="head-option-class">默认</option>
+                            <option value="1" class="option-class">仅展示关键结点</option>
+                            <option value="2" class="option-class">展示关键结点和关键链路</option>
+                            <option value="3" class="option-class">一次性展示所有内容</option>
+                            <option value="2" class="option-class">自主点选展示</option>
+                        </select>
+                        
+                        <p style="font-size: small;">...</p>
+                        <select class="common-select-class" id="inner-select2">
+                            <option value="0" class="head-option-class">默认</option>
+                            <option value="1" class="option-class">...</option>
+                        </select><br />
+                    </div>
+                </div>
+
+                <div class="setting-setting-class">
+                    <p align="center">
+                        <button class="setting-setting-button-class" onclick="saveSetting()">保存</button>
+                        <button class="setting-setting-button-class" onclick="save_quitSetting('div-layer-id','div-box-id')">保存并退出</button>
+                        <button class="setting-setting-button-class" onclick="quitSetting('div-layer-id','div-box-id')">退出</button>
+                    </p>
                 </div>
             </div>
-
-            <div class="setting-setting-class">
-                <p align="center">
-                    <button class="setting-setting-button-class" onclick="saveSetting()">保存</button>
-                    <button class="setting-setting-button-class" onclick="save_quitSetting('div-layer-id','div-box-id')">保存并退出</button>
-                    <button class="setting-setting-button-class" onclick="quitSetting('div-layer-id','div-box-id')">退出</button>
-                </p>
-            </div>
-        </div>
-        
-
-        <!--子图信息展示-->
-        <p align="center" class="explain-text-class">
-            <scan>所选子图信息</scan>
-        </p>
-
-        <!-- 子图信息表格
-        <p align="center" class="info-text-class">
-            <table align="center" width="160" border="1" bordercolor="#2F4F4F" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td class="info-text-class">子图总览</td>
-                    <td class="info-text-class">...</td>
-                </tr>
-                <tr>
-                    <td class="info-text-class">点数</td>
-                    <td class="info-text-class">185</td>
-                </tr>
-                <tr>
-                    <td class="info-text-class">Domain</td>
-                    <td class="info-text-class">150</td>
-                </tr>
-                <tr>
-                    <td class="info-text-class">Certificate</td>
-                    <td class="info-text-class">26</td>
-                </tr>
-                <tr>
-                    <td class="info-text-class">IP</td>
-                    <td class="info-text-class">8</td>
-                </tr>
-                <tr>
-                    <td class="info-text-class">ASN</td>
-                    <td class="info-text-class">1</td>
-                </tr>
-                <tr>
-                    <td class="info-text-class">边数</td>
-                    <td class="info-text-class">750</td>
-                </tr>
-                <tr>
-                    <td class="info-text-class">r_cert</td>
-                    <td class="info-text-class">224</td>
-                </tr>
-                <tr>
-                    <td class="info-text-class">r_dns_a</td>
-                    <td class="info-text-class">329</td>
-                </tr>
-                <tr>
-                    <td class="info-text-class">r_cname</td>
-                    <td class="info-text-class">101</td>
-                </tr>
-                <tr>
-                    <td class="info-text-class">r_cert_chain</td>
-                    <td class="info-text-class">21</td>
-                </tr>
-                <tr>
-                    <td class="info-text-class">r_asn</td>
-                    <td class="info-text-class">2</td>
-                </tr>
-                <tr>
-                    <td class="info-text-class">r_cidr</td>
-                    <td class="info-text-class">2</td>
-                </tr>
-                <tr>
-                    <td class="info-text-class">r_subdomain</td>
-                    <td class="info-text-class">64</td>
-                </tr>
-                <tr>
-                    <td class="info-text-class">r_request_jump</td>
-                    <td class="info-text-class">7</td>
-                </tr>
-            </table> -->
-            <!--
-            <scan>子图：（TODO）</scan><br />
-            <scan>结点数：185</scan><br />
-            <scan>边数：750</scan><br />
-            <scan>TODO</scan><br />
-            -->
-            <div class="center-top-class">
-                <button class="border-select-class" onclick="prevSelect()">↑</button>
-                <img alt="" src="./images/0.jpg" height="100" width="100" id="img0-id" ImageId="0">
-                <img alt="" src="./images/1.jpg" height="130" width="130" id="img1-id" ImageId="1">
-                <img alt="" src="./images/2.jpg" height="100" width="100" id="img2-id" ImageId="2">
-                <button class="border-select-class" onclick="nextSelect()">↓</button>
-                <scan id="select-scan-id">子图1</scan>
-            </div>
             
-        </p>
-    </div>
 
-    <div class="center-div-class">
-        <div id="container" style="width: 900px; height: 840px; top: 20px; left: 20px; right: 20px; position: relative; float: left;">
-            <!--
-            <p style="text-align: center;">
-                <img src="./pics/test2.png" height="800" width="900">
+            <!--子图信息展示-->
+            <p align="center" class="explain-text-class">
+                <scan>所选子图信息</scan>
             </p>
-            -->
+
+            <!-- 子图信息表格
+            <p align="center" class="info-text-class">
+                <table align="center" width="160" border="1" bordercolor="#2F4F4F" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td class="info-text-class">子图总览</td>
+                        <td class="info-text-class">...</td>
+                    </tr>
+                    <tr>
+                        <td class="info-text-class">点数</td>
+                        <td class="info-text-class">185</td>
+                    </tr>
+                    <tr>
+                        <td class="info-text-class">Domain</td>
+                        <td class="info-text-class">150</td>
+                    </tr>
+                    <tr>
+                        <td class="info-text-class">Certificate</td>
+                        <td class="info-text-class">26</td>
+                    </tr>
+                    <tr>
+                        <td class="info-text-class">IP</td>
+                        <td class="info-text-class">8</td>
+                    </tr>
+                    <tr>
+                        <td class="info-text-class">ASN</td>
+                        <td class="info-text-class">1</td>
+                    </tr>
+                    <tr>
+                        <td class="info-text-class">边数</td>
+                        <td class="info-text-class">750</td>
+                    </tr>
+                    <tr>
+                        <td class="info-text-class">r_cert</td>
+                        <td class="info-text-class">224</td>
+                    </tr>
+                    <tr>
+                        <td class="info-text-class">r_dns_a</td>
+                        <td class="info-text-class">329</td>
+                    </tr>
+                    <tr>
+                        <td class="info-text-class">r_cname</td>
+                        <td class="info-text-class">101</td>
+                    </tr>
+                    <tr>
+                        <td class="info-text-class">r_cert_chain</td>
+                        <td class="info-text-class">21</td>
+                    </tr>
+                    <tr>
+                        <td class="info-text-class">r_asn</td>
+                        <td class="info-text-class">2</td>
+                    </tr>
+                    <tr>
+                        <td class="info-text-class">r_cidr</td>
+                        <td class="info-text-class">2</td>
+                    </tr>
+                    <tr>
+                        <td class="info-text-class">r_subdomain</td>
+                        <td class="info-text-class">64</td>
+                    </tr>
+                    <tr>
+                        <td class="info-text-class">r_request_jump</td>
+                        <td class="info-text-class">7</td>
+                    </tr>
+                </table> -->
+                <!--
+                <scan>子图：（TODO）</scan><br />
+                <scan>结点数：185</scan><br />
+                <scan>边数：750</scan><br />
+                <scan>TODO</scan><br />
+                -->
+                <div class="center-top-class">
+                    <button class="border-select-class" onclick="prevSelect()">↑</button>
+                    <img alt="" src="./images/0.jpg" height="100" width="100" id="img0-id" ImageId="0">
+                    <img alt="" src="./images/1.jpg" height="130" width="130" id="img1-id" ImageId="1">
+                    <img alt="" src="./images/2.jpg" height="100" width="100" id="img2-id" ImageId="2">
+                    <button class="border-select-class" onclick="nextSelect()">↓</button>
+                    <scan id="select-scan-id">子图1</scan>
+                </div>
+                
+            </p>
+        </div>
+
+        <div class="center-div-class">
+            <div id="container">
+                <!--
+                <p style="text-align: center;">
+                    <img src="./pics/test2.png" height="800" width="900">
+                </p>
+                -->
+            </div>
         </div>
 
         <!--右侧图表-->
-        <div style="width: 400px; height: 840px; position: relative; float: left;">
+        <div class="right-div-class">
             <div id="right-bar-id" style="width: 370px; height: 260px; left: 40px; top: 10px; position: relative; float: left;">
             </div>
             <div id="right-pie-id1" style="width: 370px; height: 290px; left: 40px; top: 5px; position: relative; float: left;">
@@ -183,7 +185,6 @@
             <div id="right-pie-id2" style="width: 370px; height: 290px; left: 40px; top: 5px; position: relative; float: left;">
             </div>
         </div>
-        
     </div>
     
     <script type="text/javascript" src="./js/PlotCharts.js"></script>

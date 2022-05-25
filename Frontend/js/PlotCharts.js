@@ -38,7 +38,7 @@ function plotBarsPieGraph(barsId, pieId1, pieId2, graphId){
 
 function realPlotBars(graphId, divId, nodesNum, edgesNum) {
     var dom = document.getElementById(divId);
-    var myChart = echarts.init(dom, null, {
+    var myChart = echarts.init(dom, 'dark', {
         renderer: 'canvas',
         useDirtyRect: false
     });
@@ -90,7 +90,7 @@ function realPlotBars(graphId, divId, nodesNum, edgesNum) {
 
 function realPlotPie(graphId, divId, jsonData, gtype) {
     var chartDom = document.getElementById(divId);
-    var myChart = echarts.init(chartDom);
+    var myChart = echarts.init(chartDom, 'dark');
     var option;
 
     var data = [];
