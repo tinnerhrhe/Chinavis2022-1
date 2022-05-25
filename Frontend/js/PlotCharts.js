@@ -1,6 +1,6 @@
 function plotBarsPieGraph(barsId, pieId1, pieId2, graphId){
-    //var reqStr = "stat.json?graphid="+graphId;
-    var reqStr = "./output/stat.json";
+    var reqStr = "/stat/"+graphId;
+    // var reqStr = "./output/stat.json";
     var xmlHttp = null;
     if (window.ActiveXObject) {
         xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");

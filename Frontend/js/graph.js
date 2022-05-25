@@ -4,7 +4,7 @@ core.json?graphid={graphId}
 path.json?graphid={graphId}
 */
 function getJsonAndPlot(graphId) {
-    var reqStr = "graph.json?graphid=" + graphId;
+    var reqStr = "/mining/" + graphId;
     var xmlHttp = null;
     if (window.ActiveXObject) {
         xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
