@@ -21,24 +21,16 @@
     <h2>网络灰产分析</h2>
     <div class="main">
         <div class="left-div-class">
-            <p align="center" class="explain-text-class">
-                <scan>设置 & 选择</scan>
-
-                <!--左侧选择栏：选择问题1 or 问题2-->
-                <select class="select-class" id="select1-id">
-                    <option value="0" class="head-option-class">请选择所要展示的内容</option>
-                    <option value="1" class="option-class">Base</option>
-                    <option value="2" class="option-class">Challenge</option>
-                </select><br /><br />
+            <div class="explain-text-class">
 
                 <!--按钮选择-->
                 <button class="button-class" onclick="showSettingBlock('div-layer-id','div-box-id')"
-                    id="setting-button-id">设置</button><br /><br />
-                <button class="button-class" onclick="">展示</button><br /><br />
-                <button class="button-class" onclick="">...</button><br /><br />
-                <button class="button-class" onclick="">...</button><br /><br />
-            </p>
-            <hr />
+                    id="setting-button-id">设置</button>
+                <button class="button-class" onclick="">展示全图</button>
+                <button class="button-class" onclick="">核心节点</button>
+                <button class="button-class" onclick="">展示子图</button>
+        
+            </div>
             
             <!--设置按钮弹出框-->
             <div id="div-layer-id" class="layer-class"></div>
@@ -78,11 +70,27 @@
                 </div>
             </div>
             
-
+            <br/><hr>
             <!--子图信息展示-->
-            <p align="center" class="explain-text-class">
-                <scan>所选子图信息</scan>
-            </p>
+            <div class="subgraph-select-class">
+                <!--左侧选择栏：选择问题1 or 问题2-->
+                <select class="select-class" id="select1-id">
+                    <option value="0" class="head-option-class">请选择所要展示的内容</option>
+                    <option value="1" class="option-class">Base</option>
+                    <option value="2" class="option-class">Challenge</option>
+                </select>
+
+                <div>
+                    <scan>选择子图：</scan><scan id="select-scan-id">子图1</scan>
+                </div>
+                <div class="center-top-class">
+                    <button class="border-select-class" onclick="prevSelect()">↑</button>
+                    <img alt="" src="./images/0.jpg" height="100" width="100" id="img0-id" ImageId="0">
+                    <img alt="" src="./images/1.jpg" height="120" width="120" id="img1-id" ImageId="1">
+                    <img alt="" src="./images/2.jpg" height="100" width="100" id="img2-id" ImageId="2">
+                    <button class="border-select-class" onclick="nextSelect()">↓</button>
+                </div>
+            </div>
 
             <!-- 子图信息表格
             <p align="center" class="info-text-class">
@@ -154,20 +162,12 @@
                 <scan>边数：750</scan><br />
                 <scan>TODO</scan><br />
                 -->
-                <div class="center-top-class">
-                    <button class="border-select-class" onclick="prevSelect()">↑</button>
-                    <img alt="" src="./images/0.jpg" height="100" width="100" id="img0-id" ImageId="0">
-                    <img alt="" src="./images/1.jpg" height="130" width="130" id="img1-id" ImageId="1">
-                    <img alt="" src="./images/2.jpg" height="100" width="100" id="img2-id" ImageId="2">
-                    <button class="border-select-class" onclick="nextSelect()">↓</button>
-                    <scan id="select-scan-id">子图1</scan>
-                </div>
                 
             </p>
         </div>
 
         <div class="center-div-class">
-            <div id="container">
+            <div id="container" style="width: 1000px">
                 <!--
                 <p style="text-align: center;">
                     <img src="./pics/test2.png" height="800" width="900">
@@ -178,11 +178,11 @@
 
         <!--右侧图表-->
         <div class="right-div-class">
-            <div id="right-bar-id" style="width: 370px; height: 260px; left: 40px; top: 10px; position: relative; float: left;">
+            <div id="right-bar-id" style="width: 370px; height: 260px;">
             </div>
-            <div id="right-pie-id1" style="width: 370px; height: 290px; left: 40px; top: 5px; position: relative; float: left;">
+            <div id="right-pie-id1" style="width: 370px; height: 250px;">
             </div>
-            <div id="right-pie-id2" style="width: 370px; height: 290px; left: 40px; top: 5px; position: relative; float: left;">
+            <div id="right-pie-id2" style="width: 370px; height: 250px;">
             </div>
         </div>
     </div>

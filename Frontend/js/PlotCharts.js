@@ -50,6 +50,7 @@ function realPlotBars(graphId, divId, nodesNum, edgesNum) {
     console.log("Really enter...");
 
     option = {
+        backgroundColor: 'transparent',
         title: {
             text: 'SubGraph' + graphId
         },
@@ -115,6 +116,7 @@ function realPlotPie(graphId, divId, jsonData, gtype) {
     else if (gtype == 'edge' || gtype == 'Edge' || gtype == 'EDGE') gtype = 'Edge';
 
     option = {
+        backgroundColor: 'transparent',
         title: {
             text: gtype + ' Type',
             left: 'center'
@@ -125,6 +127,10 @@ function realPlotPie(graphId, divId, jsonData, gtype) {
         legend: {
             orient: 'vertical',
             left: 'left'
+        },
+        grid:{
+            top: '0%',
+            bottom: '0%'
         },
         series: [
             {
