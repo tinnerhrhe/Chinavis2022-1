@@ -53,18 +53,34 @@ for i in range(len(evidence)):
 
     print("Path Search Complete.")
 
-    print("Subgraph Searching ...")
+    print("Coregraph Searching ...")
 
     subgraph = copy.deepcopy(search.subgraph)
 
-    subgsearching = subUCS(Graph(subgraph.getNodes(), subgraph.getEdges()))
-    subgsearching.sub_run(corenodes)
+    coresearching = subUCS(Graph(subgraph.getNodes(), subgraph.getEdges()))
+    coresearching.sub_run(corenodes)
 
-    with open(cachedir + "/coresubgraph.json", "w") as f:
+    with open(cachedir + "/coregraph.json", "w") as f:
         outputgraph = {
-            "nodes": toRecords(subgsearching.subgraph.nodes),
-            "edges": toRecords(subgsearching.subgraph.edges),
+            "nodes": toRecords(coresearching.subgraph.nodes),
+            "edges": toRecords(coresearching.subgraph.edges),
         }
         f.write(json.dumps(outputgraph))
     
-    print("Subgraph Search Complete.")
+    print("Coregraph Search Complete.")
+
+    print("Coregraph with neighbors Searching ...")
+
+    subgraph = copy.deepcopy(search.subgraph)
+
+    coreneighsearching = subUCS(Graph(subgraph.getNodes(), subgraph.getEdges()), True)
+    coreneighsearching.sub_run(corenodes)
+
+    with open(cachedir + "/subgraph.json", "w") as f:
+        outputgraph = {
+            "nodes": toRecords(coreneighsearching.subgraph.nodes),
+            "edges": toRecords(coreneighsearching.subgraph.edges),
+        }
+        f.write(json.dumps(outputgraph))
+
+    print("Coregraph with neighbors Search Complete.")
