@@ -79,8 +79,8 @@ function plotGraph(remoteData) {
         const duration = 2000;
         const animateOpacity = 0.6;
         const animateBackOpacity = 0.1;
-        const virtualEdgeOpacity = 0.1;
-        const realEdgeOpacity = 0.2;
+        const virtualEdgeOpacity = 0.3;
+        const realEdgeOpacity = 0.4;
         
         const darkBackColor = 'rgb(43, 47, 51)';
         const disableColor = '#777';
