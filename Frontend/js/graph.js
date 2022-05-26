@@ -1543,7 +1543,7 @@ const findPath = () => {
     descriptionDiv.style.marginTop = '8px';
     container.appendChild(descriptionDiv);
 
-    container.style.backgroundColor = 'rgba(0,0,0,0.25)';
+    container.style.backgroundColor = 'rgba(0,0,0)';
 
     CANVAS_WIDTH = container.scrollWidth;
     CANVAS_HEIGHT = (container.scrollHeight || 500) - 30;
