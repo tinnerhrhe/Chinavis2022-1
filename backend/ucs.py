@@ -222,7 +222,7 @@ class pathUCS(UCS):
 
 class subUCS(UCS):
     def __init__(self, graph, ifneighbors=False):
-        self.subgraph = Subgraph(["id","style"],["id","source","target","relation"])
+        self.subgraph = Subgraph(["id","style"],["id","source","target"])
         self.ifneighbors = ifneighbors
 
         self.default_style = {}
