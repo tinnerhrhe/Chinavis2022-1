@@ -173,7 +173,7 @@ function prevSelect() {
     ele1.setAttribute('ImageId', ele2.getAttribute('ImageId'));
     ele2.setAttribute('src', ele3.getAttribute('src'));
     ele2.setAttribute('ImageId', ele3.getAttribute('ImageId'));
-    var nextId = (Number(ele3.getAttribute('ImageId')) + 1) % imgNum;
+    var nextId = (Number(ele2.getAttribute('ImageId')) + 1) % imgNum;
     var tmp_path = './images/' + nextId + '.jpg';
     ele3.setAttribute('src', tmp_path);
     ele3.setAttribute('ImageId', '' + nextId);
