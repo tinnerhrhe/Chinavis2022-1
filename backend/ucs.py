@@ -88,11 +88,12 @@ class UCS:
 
 class searchUCS(UCS):
     def __init__(self, graph, limitation, vis_node=None, vis_edge=None):
-        self.node_limit = limitation["node"]
-        self.edge_limit = limitation["edge"]
+        self.limitation = limitation
+        self.node_limit = net_limit[limitation]["node"]
+        self.edge_limit = net_limit[limitation]["edge"]
         self.subgraph = Subgraph(["id", "label", "style"], ["id", "source", "target", "label"])
         self.corenodes = []
-        self.statdata = {"nodes": {}, "edges": {}}
+        self.statdata = {"nodes": {}, "edges": {}, "industries": {}}
 
         self.default_style = {}
         self.core_style = {"fill": "blue"}
@@ -106,7 +107,7 @@ class searchUCS(UCS):
             neighbors = node.queryChildren()
 
         before = len(neighbors)
-        node.iscore = coreasset(node.node_id, neighbors)
+        node.iscore = coreasset(node.node_id, neighbors, self.limitation)
         neighbors = filter(node.node_id, neighbors)
         after = len(neighbors)
         print("%d" % before if before == after else "%d(%d)" % (before, after), end=" ")
@@ -124,6 +125,13 @@ class searchUCS(UCS):
             self.statdata["nodes"][node.label] = 1
         else:
             self.statdata["nodes"][node.label] += 1
+
+        industries = queryIndustry(node.node_id)
+        for industry in industries:
+            if industry not in self.statdata["industries"].keys():
+                self.statdata["industries"][industry] = 1
+            else:
+                self.statdata["industries"][industry] += 1
 
         if node.iscore:
             self.corenodes.append(node.node_id)
@@ -235,17 +243,17 @@ class subUCS(UCS):
     def add_neighbors(self, node_id):
         neighbors = self.get_neighbors(Node(self.graph,node_id))
         for e in neighbors:
-            if e["id"] in self.visitedEdges:
+            if e["id"] in self.visitedEdge:
                 continue
-            self.visitedEdges.add(e["id"])
+            self.visitedEdge.add(e["id"])
             self.subgraph.addEdge({
                 "id": str(e["id"]),
                 "source": e["source"],
                 "target": e["target"],
             })
             neighbor = e["target"] if e["source"] == node_id else e["source"]
-            if neighbor not in self.visitedNodes:
-                self.visitedNodes.add(neighbor)
+            if neighbor not in self.visitedNode:
+                self.visitedNode.add(neighbor)
                 self.subgraph.addNode({
                     "id": neighbor,
                     "style": self.default_style
