@@ -18,7 +18,7 @@ for i in range(len(evidence)):
     print("Search Complete.")
 
     subgraph = copy.deepcopy(search.subgraph)
-    with open("output/graph.json", "w") as f:
+    with open(cachedir + "/graph.json", "w") as f:
         outputgraph = {
             "nodes": toRecords(subgraph.nodes),
             "edges": toRecords(subgraph.edges),
