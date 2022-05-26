@@ -4,7 +4,7 @@ core.json?graphid={graphId}
 path.json?graphid={graphId}
 */
 function getJsonAndPlot(graphId) {
-    var reqStr = "./output/graph.json";
+    var reqStr = "./output/" + graphId + "/graph.json";
     //var reqStr = "graph.json?graphid=" + graphId;
     var xmlHttp = null;
     if (window.ActiveXObject) {
@@ -35,7 +35,7 @@ function getJsonAndPlot(graphId) {
 }
 
 function plotGraph(remoteData) {
-        function isNumber(n){
+    function isNumber(n){
       return n.length == 1;
     }
     function isArray(n){
@@ -1527,10 +1527,12 @@ const findPath = () => {
   });
 };
 //useEffect(() => {
-fetch('./output/graph.json')
-  .then((res) => res.json())
-  .then((data) => {
+// fetch('./output/graph.json')
+  // .then((res) => res.json())
+  // .then((data) => {
+    let data = remoteData;
     const container = document.getElementById('container');
+    container.innerHTML = "";
     const descriptionDiv = document.createElement('div');
       descriptionDiv.innerHTML = ``;
       // <a href='/en/largegraph' target='_blanck'>Click【HERE】To Full Demo</a><br/><a href='/zh/largegraph' target='_blanck'>点击【这里】进入完整 Demo</a>
@@ -1798,7 +1800,6 @@ fetch('./output/graph.json')
     graph.data({ nodes: aggregatedData.nodes, edges: processedEdges });
     graph.render();
     setGraphInstance(graph);
-  });
-};
+  }
       main();
 }

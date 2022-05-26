@@ -1,6 +1,6 @@
 function plotBarsPieGraph(barsId, pieId1, pieId2, graphId){
     //var reqStr = "stat.json?graphid="+graphId;
-    var reqStr = "./output/stat.json";
+    var reqStr = "./output/" + graphId + "/stat.json";
     var xmlHttp = null;
     if (window.ActiveXObject) {
         xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
@@ -181,7 +181,7 @@ function prevSelect() {
     ///
     console.log("Begin to plot..." + nextId);
     plotBarsPieGraph('right-bar-id','right-pie-id1','right-pie-id2',nextId);
-
+    getJsonAndPlot(nextId);
     ele_cap.innerHTML = '子图' + nextId;
 }
 
@@ -206,6 +206,6 @@ function nextSelect() {
     ///
     console.log("Begin to plot..." + nextId);
     plotBarsPieGraph('right-bar-id','right-pie-id1','right-pie-id2',nextId);
-
+    getJsonAndPlot(nextId);
     ele_cap.innerHTML = '子图' + nextId;
 }
