@@ -142,6 +142,6 @@ def toRecords(neighbors):
     return neighbors.to_dict(orient="records")
 
 def queryIndustry(node_id):
-    return scorednode['industry'][node_id][1:-1].replace("'","").split(', ')
+    return scorednode['industry'][node_id][1:-1].replace("'","").replace(" ","").split(',')
 
 #############################
