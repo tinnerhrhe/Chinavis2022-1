@@ -37,8 +37,6 @@ print("Load Data Complete.")
 
 from meta import *
 
-# 核心资产的邻居数目不得低于这个数值
-CORE_LIMIT = 6
 # 筛选同类型节点的底数
 FILTER_BASE = 20
 # 筛选阈值
@@ -122,7 +120,7 @@ def filter(curnode, neighbors):
 
 
 # 是否是核心资产
-def coreasset(curnode, neighbors):
+def coreasset(curnode, neighbors, limitation):
     if len(neighbors) == 0:
         return False
     rel_cnt = neighbors.groupby(["relation"]).count()
@@ -132,7 +130,8 @@ def coreasset(curnode, neighbors):
         return False
     if "r_dns_a" in rel_cnt.index.values and rel_cnt["target"]["r_dns_a"] > 2:
         return False
-    if len(neighbors) <= CORE_LIMIT:
+    # 核心资产的邻居数目不得低于这个数值
+    if len(neighbors) <= net_limit[limitation]['corelimit']:
         return False
     if scorednode['score'][curnode] < corescorethres:
         return False
@@ -142,5 +141,7 @@ def coreasset(curnode, neighbors):
 def toRecords(neighbors):
     return neighbors.to_dict(orient="records")
 
+def queryIndustry(node_id):
+    return scorednode['industry'][node_id][1:-1].replace("'","").split(', ')
 
 #############################

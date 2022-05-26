@@ -11,7 +11,7 @@ for i in range(len(evidence)):
     if not os.path.isdir(cachedir):
         os.mkdir(cachedir)
 
-    search = searchUCS(Graph(node, link), net_limit[limitation])
+    search = searchUCS(Graph(node, link), limitation)
 
     search.search_run(source)
 
