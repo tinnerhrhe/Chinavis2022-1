@@ -90,7 +90,7 @@ class searchUCS(UCS):
     def __init__(self, graph, limitation, vis_node=None, vis_edge=None):
         self.node_limit = limitation["node"]
         self.edge_limit = limitation["edge"]
-        self.subgraph = Subgraph()
+        self.subgraph = Subgraph(["id", "label", "style"], ["id", "source", "target", "label"])
         self.corenodes = []
         self.statdata = {"nodes": {}, "edges": {}}
 
@@ -218,4 +218,62 @@ class pathUCS(UCS):
         self.visitedEdges = set()
 
         q = [[0, node_id]]
+        super().run(q)
+
+class subUCS(UCS):
+    def __init__(self, graph, ifneighbors=False):
+        self.subgraph = Subgraph(["id","style"],["id","source","target","relation"])
+        self.ifneighbors = ifneighbors
+
+        self.default_style = {}
+        self.core_style = {"fill": "blue"}
+        super().__init__(graph, False)
+
+    def get_neighbors(self, node: Node):
+        return toRecords(node.queryNeighbors())
+
+    def add_node(self, node: Node):
+        if node.node_id in self.targets:
+            self.targets.remove(node.node_id)
+            tptr = node.node_id
+            self.subgraph.addNode({
+                "id": tptr,
+                "style": self.core_style
+            })
+
+            while tptr != self.source:
+                tedge = self.edge_to[tptr]
+                self.subgraph.addEdge({
+                    "id": str(tedge["id"]),
+                    "source": tedge["prev"],
+                    "target": tptr,
+                })
+                if tptr != self.source:
+                    self.subgraph.addNode({
+                        "id": tedge["prev"],
+                        "style": self.default_style
+                    })
+                tptr = tedge["prev"]
+
+        return len(self.targets) == 0
+
+    def add_edge(self, e, curnode):
+        neighbor = e["target"] if e["source"] == curnode else e["source"]
+        self.edge_to[neighbor] = {"id": e["id"], "prev": curnode}
+
+    def sub_run(self, subset):
+        self.source = subset[0]
+        self.targets = set(subset)
+        self.targets.remove(self.source)
+
+        # Store the prev node
+        self.edge_to = {}
+
+        # Add source node into subgraph
+        self.subgraph.addNode({
+            "id": self.source,
+            "style": self.core_style
+        })
+
+        q = [[0, self.source]]
         super().run(q)

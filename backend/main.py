@@ -52,3 +52,19 @@ for i in range(len(evidence)):
             f.write(json.dumps(list(pathtracing.visitedEdges)))
 
     print("Path Search Complete.")
+
+    print("Subgraph Searching ...")
+
+    subgraph = copy.deepcopy(search.subgraph)
+
+    subgsearching = subUCS(Graph(subgraph.getNodes(), subgraph.getEdges()))
+    subgsearching.sub_run(corenodes)
+
+    with open(cachedir + "/coresubgraph.json", "w") as f:
+        outputgraph = {
+            "nodes": toRecords(subgsearching.subgraph.nodes),
+            "edges": toRecords(subgsearching.subgraph.edges),
+        }
+        f.write(json.dumps(outputgraph))
+    
+    print("Subgraph Search Complete.")

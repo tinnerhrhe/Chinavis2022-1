@@ -56,10 +56,10 @@ class Graph:
 
 
 class Subgraph(Graph):
-    def __init__(self):
+    def __init__(self, nodecols, edgecols):
         super().__init__(
-            pd.DataFrame(columns=["id", "label", "style"]),
-            pd.DataFrame(columns=["id", "source", "target", "label"]),
+            pd.DataFrame(columns=nodecols),
+            pd.DataFrame(columns=edgecols),
         )
 
     # DataFrame.append() is deprecated.
