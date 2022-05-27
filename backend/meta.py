@@ -48,9 +48,9 @@ net_limit = {
 
 # 线索
 evidence = [
-    # ["Domain_c58c149eec59bb14b0c102a0f303d4c20366926b5c3206555d2937474124beb9", "small"],
-    # ["IP_400c19e584976ff2a35950659d4d148a3d146f1b71692468132b849b0eb8702c", "medium"],
-    # ["Domain_24acfd52f9ceb424d4a2643a832638ce1673b8689fa952d9010dd44949e6b1d9", "medium"],
-    # ["IP_7e730b193c2496fc908086e8c44fc2dbbf7766e599fabde86a4bcb6afdaad66e", "large"],
+    ["Domain_c58c149eec59bb14b0c102a0f303d4c20366926b5c3206555d2937474124beb9", "small"],
+    ["IP_400c19e584976ff2a35950659d4d148a3d146f1b71692468132b849b0eb8702c", "medium"],
+    ["Domain_24acfd52f9ceb424d4a2643a832638ce1673b8689fa952d9010dd44949e6b1d9", "medium"],
+    ["IP_7e730b193c2496fc908086e8c44fc2dbbf7766e599fabde86a4bcb6afdaad66e", "large"],
     ["IP_21ce145cae6730a99300bf677b83bbe430cc0ec957047172e73659372f0031b8","large"]
 ]
