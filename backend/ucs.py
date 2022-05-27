@@ -108,6 +108,7 @@ class searchUCS(UCS):
 
         before = len(neighbors)
         node.iscore = coreasset(node.node_id, neighbors, self.limitation)
+        # 这将移除关联的邻居节点
         neighbors = filter(node.node_id, neighbors)
         after = len(neighbors)
         print("%d" % before if before == after else "%d(%d)" % (before, after), end=" ")
@@ -132,6 +133,9 @@ class searchUCS(UCS):
                 self.statdata["industries"][industry] = 1
             else:
                 self.statdata["industries"][industry] += 1
+
+        # 移除正在访问的节点
+        removenode(node.node_id)
 
         if node.iscore:
             self.corenodes.append(node.node_id)

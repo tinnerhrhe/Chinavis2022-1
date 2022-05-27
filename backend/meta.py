@@ -35,9 +35,16 @@ link_limit = {
 # 网络限制
 net_limit = {
     'small' : { 'node': 400, 'edge': 800, 'corelimit': 6 },
-    'medium': { 'node': 800, 'edge': 1600, 'corelimit': 10 },
-    'large': { 'node': 3000, 'edge': 6000, 'corelimit': 20 }
+    'medium': { 'node': 800, 'edge': 1600, 'corelimit': 8 },
+    'large': { 'node': 3000, 'edge': 6000, 'corelimit': 10 }
 }
+
+## DEBUG USE ONLY
+# net_limit = {
+#     'small' : { 'node': 10, 'edge': 20, 'corelimit': 1 },
+#     'medium': { 'node': 20, 'edge': 40, 'corelimit': 2 },
+#     'large': { 'node': 30, 'edge': 80, 'corelimit': 3 }
+# }
 
 # 线索
 evidence = [
@@ -45,11 +52,5 @@ evidence = [
     ["IP_400c19e584976ff2a35950659d4d148a3d146f1b71692468132b849b0eb8702c", "medium"],
     ["Domain_24acfd52f9ceb424d4a2643a832638ce1673b8689fa952d9010dd44949e6b1d9", "medium"],
     ["IP_7e730b193c2496fc908086e8c44fc2dbbf7766e599fabde86a4bcb6afdaad66e", "large"],
-    ["IP_21ce145cae6730a99300bf677b83bbe430cc0ec957047172e73659372f0031b8","large"],
-    # 挑战2
-    ["IP_33a86b035f506cef7386b17094b4886da0caf162a343faf842ba0afd22e2310a","medium"], 
-    ["IP_ad208364e4cb5937b5385dc95f3a3a8430d1f882d6210c7629a05cdcc15aa843","medium"],
-    ["IP_437fbf69fd705813abd0eb24687458bf1c3efccab9b98ef3846faced666741e8","medium"],
-    ["IP_7800276971d4e1d5c2ef8acf2a03d82361e263d1b1f941640bb64636b68034e6","medium"],
-    ["IP_2a43b74bf0596e4e7aada857d1e67cc41365b5727b30986a4e8c9d954c280593","medium"]
+    ["IP_21ce145cae6730a99300bf677b83bbe430cc0ec957047172e73659372f0031b8","large"]
 ]

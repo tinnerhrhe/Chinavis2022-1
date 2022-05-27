@@ -35,6 +35,16 @@ print("Load Data Complete.")
 
 #############################
 
+# 记录访问节点
+remainnode = pd.DataFrame(scorednode)
+remainnode = remainnode.sort_values(by='score', ascending=False)
+
+def removenode(node_id):
+    global remainnode
+    remainnode = remainnode[remainnode.index != node_id]
+
+#############################
+
 from meta import *
 
 # 筛选同类型节点的底数
@@ -106,6 +116,10 @@ def filter(curnode, neighbors):
     neighbors['score'] = neighbors['neighbor'].apply(lambda x: scorednode['score'][x])
     neighbors = neighbors.sort_values(by='score', ascending=False)
 
+    # Filter is only used in searchUCS
+    global remainnode
+    remainnode = remainnode[remainnode.index.isin(neighbors['neighbor']) == False]
+
     if len(neighbors) > FILTER_THRESHOLD:
         neighbors = neighbors.groupby(["relation"]).apply(
             lambda x: x.head(int(FILTER_BASE * math.log(len(x), FILTER_THRESHOLD)))
@@ -141,6 +155,7 @@ def coreasset(curnode, neighbors, limitation):
 def toRecords(neighbors):
     return neighbors.to_dict(orient="records")
 
+# 查询产业，如果产业为空将返回 [""] 没有特殊处理，这将表示没有产业，可以被忽略。
 def queryIndustry(node_id):
     return scorednode['industry'][node_id][1:-1].replace("'","").replace(" ","").split(',')
 
