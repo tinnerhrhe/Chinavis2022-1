@@ -95,8 +95,7 @@ with open(outputdir + "/.gitkeep", "w") as f:
     pass
 
 # Problem 1
-# for i in range(len(evidence)):
-for i in range(1):
+for i in range(len(evidence)):
     main_run(evidence[i][0], evidence[i][1], i)
 
 # Problem 2
