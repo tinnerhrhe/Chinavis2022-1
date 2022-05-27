@@ -35,8 +35,8 @@ link_limit = {
 # 网络限制
 net_limit = {
     'small' : { 'node': 400, 'edge': 800, 'corelimit': 6 },
-    'medium': { 'node': 800, 'edge': 1600, 'corelimit': 8 },
-    'large': { 'node': 3000, 'edge': 6000, 'corelimit': 10 }
+    'medium': { 'node': 800, 'edge': 1600, 'corelimit': 10 },
+    'large': { 'node': 3000, 'edge': 6000, 'corelimit': 20 }
 }
 
 ## DEBUG USE ONLY
