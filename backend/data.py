@@ -1,6 +1,7 @@
 # 由于数据量较大（~688MB），
 # 需要使用 pandas 数据工具加速查询。
 
+import copy
 import pandas as pd
 import math
 import os
@@ -37,7 +38,7 @@ print("Load Data Complete.")
 
 # 记录访问节点
 # # For copying DataFrame, the copy is default False.
-remainnode = pd.DataFrame(scorednode, copy=True) 
+remainnode = copy.deepcopy(remainnode) 
 remainnode = remainnode.sort_values(by='score', ascending=False)
 
 def removenode(node_id):
