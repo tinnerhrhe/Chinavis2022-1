@@ -36,7 +36,8 @@ print("Load Data Complete.")
 #############################
 
 # 记录访问节点
-remainnode = pd.DataFrame(scorednode)
+# # For copying DataFrame, the copy is default False.
+remainnode = pd.DataFrame(scorednode, copy=True) 
 remainnode = remainnode.sort_values(by='score', ascending=False)
 
 def removenode(node_id):
