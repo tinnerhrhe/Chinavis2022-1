@@ -38,7 +38,7 @@ print("Load Data Complete.")
 
 # 记录访问节点
 # # For copying DataFrame, the copy is default False.
-remainnode = copy.deepcopy(remainnode) 
+remainnode = copy.deepcopy(scorednode) 
 remainnode = remainnode.sort_values(by='score', ascending=False)
 
 def removenode(node_id):
