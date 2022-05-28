@@ -4,8 +4,10 @@
 import copy
 import pandas as pd
 import math
-import os
 import numpy as np
+
+# 关闭 SettingWithCopyWarning
+pd.options.mode.chained_assignment = None
 
 ########## 加载数据 ##########
 
@@ -125,22 +127,22 @@ def queryScore(node_id):
 # group_filtered = log_{filter_threshold}^len(x)
 def filter(curnode, neighbors):
     # filter by scorednode for mining.
-    # neighbors = neighbors[neighbors['source'].isin(scorednode.index) & neighbors['target'].isin(scorednode.index)]
-    # if len(neighbors) == 0:
-    #     return neighbors[['id', 'relation', 'source', 'target']]
-    # neighbors.loc[:,'neighbor'] = neighbors.apply(
-    #     lambda x: 
-    #     x['source'] if x['target'] == curnode 
-    #     else x['target'], axis=1)
-    # neighbors.loc[:,'score'] = neighbors.apply(
-    #     lambda x: scorednode['score'][x['neighbor']], axis=1)
-    # neighbors = neighbors.sort_values(by='score', ascending=False)
+    neighbors = neighbors[neighbors['source'].isin(scorednode.index) & neighbors['target'].isin(scorednode.index)]
+    if len(neighbors) == 0:
+        return neighbors[['id', 'relation', 'source', 'target']]
+    neighbors['neighbor'] = neighbors.apply(
+        lambda x: 
+        x['source'] if x['target'] == curnode 
+        else x['target'], axis=1)
+    neighbors['score'] = neighbors['neighbor'].apply(
+        lambda x: scorednode['score'][x])
+    neighbors = neighbors.sort_values(by='score', ascending=False)
 
     # Filter is only used in searchUCS
     global remainnode
-    # remainnode.drop(index=neighbors['neighbor'], inplace=True, errors='ignore')
-    remainnode.drop(index=neighbors['source'], inplace=True, errors='ignore')
-    remainnode.drop(index=neighbors['target'], inplace=True, errors='ignore')
+    remainnode.drop(index=neighbors['neighbor'], inplace=True, errors='ignore')
+    # remainnode.drop(index=neighbors['source'], inplace=True, errors='ignore')
+    # remainnode.drop(index=neighbors['target'], inplace=True, errors='ignore')
     # remainnode = remainnode[(remainnode.index.isin(neighbors['source']) == False) & (remainnode.index.isin(neighbors['target']) == False)]
 
     if len(neighbors) > FILTER_THRESHOLD:
