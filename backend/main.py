@@ -107,4 +107,4 @@ for i in range(len(evidence)):
 # Problem 2
 # Top node in the remaining nodes.
 for i in range(5, 10):
-    main_run(remainnode.iloc[0].name, 'small', i)
+    main_run(getTopNode(), 'small', i)

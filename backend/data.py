@@ -26,6 +26,7 @@ score = np.load('score.npy')
 score = pd.DataFrame(score, columns=['score'])
 scorednode = pd.concat([scorednode, score], axis=1)
 scorednode.set_index('id', inplace=True)
+scorednode = scorednode[['name','type','industry','score']] # remove 'index' column
 
 print("Load Data Complete.")
 print("Scored Node: %d (%.2f%%)" % (len(scorednode), len(scorednode) / len(node) * 100))
@@ -39,7 +40,10 @@ remainnode = remainnode.sort_values(by='score', ascending=False)
 
 def removenode(node_id):
     global remainnode
-    remainnode = remainnode[remainnode.index != node_id]
+    remainnode.drop(index=node_id, inplace=True, errors='ignore')
+
+def getTopNode():
+    return remainnode.iloc[0].name
 
 #############################
 
@@ -120,18 +124,24 @@ def queryScore(node_id):
 # For stability concern, we use head() instead of sample()
 # group_filtered = log_{filter_threshold}^len(x)
 def filter(curnode, neighbors):
-    # # filter by scorednode for mining.
+    # filter by scorednode for mining.
     # neighbors = neighbors[neighbors['source'].isin(scorednode.index) & neighbors['target'].isin(scorednode.index)]
     # if len(neighbors) == 0:
     #     return neighbors[['id', 'relation', 'source', 'target']]
-    # neighbors['neighbor'] = neighbors.apply(lambda x: x['source'] if x['target'] == curnode else x['target'], axis=1)
-    # neighbors['score'] = neighbors['neighbor'].apply(lambda x: scorednode.iloc[x, 'score'])
+    # neighbors.loc[:,'neighbor'] = neighbors.apply(
+    #     lambda x: 
+    #     x['source'] if x['target'] == curnode 
+    #     else x['target'], axis=1)
+    # neighbors.loc[:,'score'] = neighbors.apply(
+    #     lambda x: scorednode['score'][x['neighbor']], axis=1)
     # neighbors = neighbors.sort_values(by='score', ascending=False)
 
     # Filter is only used in searchUCS
     global remainnode
-    # remainnode = remainnode[remainnode.index.isin(neighbors['neighbor']) == False]
-    remainnode = remainnode[(remainnode.index.isin(neighbors['source']) == False) & (remainnode.index.isin(neighbors['target']) == False)]
+    # remainnode.drop(index=neighbors['neighbor'], inplace=True, errors='ignore')
+    remainnode.drop(index=neighbors['source'], inplace=True, errors='ignore')
+    remainnode.drop(index=neighbors['target'], inplace=True, errors='ignore')
+    # remainnode = remainnode[(remainnode.index.isin(neighbors['source']) == False) & (remainnode.index.isin(neighbors['target']) == False)]
 
     if len(neighbors) > FILTER_THRESHOLD:
         neighbors = neighbors.groupby(["relation"]).apply(

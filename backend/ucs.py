@@ -117,6 +117,9 @@ class searchUCS(UCS):
 
     def add_node(self, node: Node):
 
+        # 移除正在访问的节点
+        removenode(node.node_id)
+
         # cut off
         if self.node_limit == 0:
             return True
@@ -133,9 +136,6 @@ class searchUCS(UCS):
                 self.statdata["industries"][industry] = 1
             else:
                 self.statdata["industries"][industry] += 1
-
-        # 移除正在访问的节点
-        removenode(node.node_id)
 
         if node.iscore:
             self.corenodes.append(node.node_id)
