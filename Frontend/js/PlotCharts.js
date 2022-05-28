@@ -27,10 +27,28 @@ function plotBarsPieGraph(barsId, pieId1, pieId2, graphId){
                 for (var key in data['nodes']) nodesNum += data['nodes'][key];
                 for (var key in data['edges']) edgesNum += data['edges'][key];
                 ///
-    console.log(graphId);
+                //console.log(graphId);
+                var divId01 = "bar-pie-id";
+                var divId02 = "wordcloud-container-id";
+                var ele1 = document.getElementById(divId01);
+                var ele2 = document.getElementById(divId02);
+                var flag1 = 0;
+                if (ele1.style.display == 'none') {
+                    flag1 = 1;
+                    ele1.style.display = 'inherit';
+                }
                 realPlotBars(graphId, barsId, nodesNum, edgesNum);
                 realPlotPie(graphId, pieId1, data['nodes'], 'node');
                 realPlotPie(graphId, pieId2, data['edges'], 'edge');
+                if (flag1 == 1) ele1.style.display = 'none';
+
+                flag1 = 0;
+                if (ele2.style.display == 'none') {
+                    flag1 = 1;
+                    ele2.style.display = 'inherit';
+                }
+                realPlotWordCloud("word-cloud-id", data['industries']);
+                if (flag1 == 1) ele2.style.display = 'none';
             }
         }
     }
@@ -208,4 +226,51 @@ function nextSelect() {
     plotBarsPieGraph('right-bar-id','right-pie-id1','right-pie-id2',nextId);
     getJsonAndPlot(nextId);
     ele_cap.innerHTML = '子图' + nextId;
+}
+
+function realPlotWordCloud(divId, data) {
+    // div-id
+    var div_id = divId;
+    var typeMap = {
+        "A": "涉黄",
+        "B": "涉赌",
+        "C": "诈骗",
+        "D": "涉毒",
+        "E": "涉枪",
+        "F": "黑客",
+        "G": "非法交易平台",
+        "H": "非法支付平台",
+        "I": "其他"
+    };
+    var new_data = [];
+    for (var key in data) {
+        if (key == "") continue;
+        var name = typeMap[key];
+        var value = data[key] > 40 ? 40 : data[key];
+        value = value * 7.6;
+        new_data.push([
+            name,
+            value
+        ]);
+    }
+
+    console.log(new_data);
+    console.log(div_id);
+
+    var options = [];
+    options.list = new_data;
+
+    var ele = document.getElementById(div_id);
+    WordCloud(ele, options);
+}
+
+function selectDisplay(divId1, divId2, op) {
+    if (op == 1) {
+        document.getElementById(divId1).style.display = 'inherit';
+        document.getElementById(divId2).style.display = 'none';
+    }
+    else if (op == 2) {
+        document.getElementById(divId2).style.display = 'inherit';
+        document.getElementById(divId1).style.display = 'none';
+    }
 }

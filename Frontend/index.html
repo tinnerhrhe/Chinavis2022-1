@@ -119,77 +119,6 @@
                     <button class="border-select-class" onclick="prevSelect()">↓</button>
                 </div>
             </div>
-
-            <!-- 子图信息表格
-            <p align="center" class="info-text-class">
-                <table align="center" width="160" border="1" bordercolor="#2F4F4F" cellspacing="0" cellpadding="0">
-                    <tr>
-                        <td class="info-text-class">子图总览</td>
-                        <td class="info-text-class">...</td>
-                    </tr>
-                    <tr>
-                        <td class="info-text-class">点数</td>
-                        <td class="info-text-class">185</td>
-                    </tr>
-                    <tr>
-                        <td class="info-text-class">Domain</td>
-                        <td class="info-text-class">150</td>
-                    </tr>
-                    <tr>
-                        <td class="info-text-class">Certificate</td>
-                        <td class="info-text-class">26</td>
-                    </tr>
-                    <tr>
-                        <td class="info-text-class">IP</td>
-                        <td class="info-text-class">8</td>
-                    </tr>
-                    <tr>
-                        <td class="info-text-class">ASN</td>
-                        <td class="info-text-class">1</td>
-                    </tr>
-                    <tr>
-                        <td class="info-text-class">边数</td>
-                        <td class="info-text-class">750</td>
-                    </tr>
-                    <tr>
-                        <td class="info-text-class">r_cert</td>
-                        <td class="info-text-class">224</td>
-                    </tr>
-                    <tr>
-                        <td class="info-text-class">r_dns_a</td>
-                        <td class="info-text-class">329</td>
-                    </tr>
-                    <tr>
-                        <td class="info-text-class">r_cname</td>
-                        <td class="info-text-class">101</td>
-                    </tr>
-                    <tr>
-                        <td class="info-text-class">r_cert_chain</td>
-                        <td class="info-text-class">21</td>
-                    </tr>
-                    <tr>
-                        <td class="info-text-class">r_asn</td>
-                        <td class="info-text-class">2</td>
-                    </tr>
-                    <tr>
-                        <td class="info-text-class">r_cidr</td>
-                        <td class="info-text-class">2</td>
-                    </tr>
-                    <tr>
-                        <td class="info-text-class">r_subdomain</td>
-                        <td class="info-text-class">64</td>
-                    </tr>
-                    <tr>
-                        <td class="info-text-class">r_request_jump</td>
-                        <td class="info-text-class">7</td>
-                    </tr>
-                </table> -->
-                <!--
-                <scan>子图：（TODO）</scan><br />
-                <scan>结点数：185</scan><br />
-                <scan>边数：750</scan><br />
-                <scan>TODO</scan><br />
-                -->
                 
             </p>
         </div>
@@ -206,15 +135,25 @@
 
         <!--右侧图表-->
         <div class="right-div-class">
-            <div id="right-bar-id" style="width: 370px; height: 260px;">
+            <button class="button-class" onclick="selectDisplay('bar-pie-id','wordcloud-container-id',1)">子图信息</button>
+            <button class="button-class" onclick="selectDisplay('bar-pie-id','wordcloud-container-id',2)">词云</button>
+            <br /><br />
+            <div id="bar-pie-id">
+                <div id="right-bar-id" style="width: 370px; height: 260px;">
+                </div>
+                <div id="right-pie-id1" style="width: 370px; height: 250px;">
+                </div>
+                <div id="right-pie-id2" style="width: 370px; height: 280px;">
+                </div>
             </div>
-            <div id="right-pie-id1" style="width: 370px; height: 250px;">
-            </div>
-            <div id="right-pie-id2" style="width: 370px; height: 250px;">
+            <div id="wordcloud-container-id" style="display: none;">
+                <div id="word-cloud-id" style="width: 370px; height: 290px; right: 5px;left: 5px;">
+                </div>
             </div>
         </div>
     </div>
     
+    <script type="text/javascript" src="./js/wordcloud2.js"></script>
     <script type="text/javascript" src="./js/PlotCharts.js"></script>
     <script type="text/javascript" src="./js/SettingBlock.js"></script>
     <script type="text/javascript" src="./js/graph.js"></script>
