@@ -1,1 +1,0 @@
-{"nodes": {"IP": 7, "ASN": 2, "Domain": 135, "Cert": 94}, "edges": {"r_asn": 2, "r_cidr": 3, "r_dns_a": 99, "r_subdomain": 57, "r_cert": 66, "r_cert_chain": 57, "r_cname": 1}, "industries": {"": 103, "B": 135}}

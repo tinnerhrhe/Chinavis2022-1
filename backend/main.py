@@ -107,5 +107,13 @@ for i in range(len(evidence)):
 
 # Problem 2
 # Top node in the remaining nodes.
-for i in range(5, 10):
+# In case some nodes failed to mine,
+# Make auxiliary solutions for that.
+for i in range(5, 8):
+    main_run(getTopNode(), 'large', i)
+
+for i in range(8, 11):
+    main_run(getTopNode(), 'medium', i)
+
+for i in range(11, 14):
     main_run(getTopNode(), 'small', i)
