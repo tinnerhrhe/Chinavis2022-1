@@ -55,8 +55,12 @@ FILTER_BASE = 20
 FILTER_THRESHOLD = 50
 # 核心节点打分应当为 5% 以内
 CORETOP = 5
-corescorethres = scorednode['score'].describe(percentiles=[(100 - CORETOP) / 100])[str(100 - CORETOP) + '%']
-print("Threshold Score for Core node is %.2f" % corescorethres)
+
+def refreshcorethres():
+    global corescorethres
+    corescorethres = remainnode['score'].describe(percentiles=[(100 - CORETOP) / 100])[str(100 - CORETOP) + '%']
+    print("Remaining Node: %d, Threshold Score for Core node is %.2f" % (len(remainnode), corescorethres))
+refreshcorethres()
 
 # 图：预期使用 pandas 存储
 class Graph:

@@ -12,6 +12,9 @@ def main_run(source, limitation, ord):
     if not os.path.isdir(cachedir):
         os.mkdir(cachedir)
 
+    # Refresh Threshold every run
+    refreshcorethres()
+
     search = searchUCS(Graph(node, link), limitation)
 
     search.search_run(source)
@@ -101,4 +104,4 @@ for i in range(len(evidence)):
 # Problem 2
 # Top node in the remaining nodes.
 for i in range(5, 10):
-    main_run(remainnode.iloc[0].name, 'medium', i)
+    main_run(remainnode.iloc[0].name, 'small', i)

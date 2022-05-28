@@ -179,6 +179,9 @@ class searchUCS(UCS):
     def search_run(self, node_id):
         q = [[1, node_id]]
         super().run(q)
+        if len(self.corenodes) == 0:
+            print("No corenodes! Add the init node!")
+            self.corenodes.append(node_id)
 
 
 class pathUCS(UCS):
