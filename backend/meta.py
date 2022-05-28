@@ -40,11 +40,11 @@ net_limit = {
 }
 
 ## DEBUG USE ONLY
-# net_limit = {
-#     'small' : { 'node': 10, 'edge': 20, 'corelimit': 1 },
-#     'medium': { 'node': 20, 'edge': 40, 'corelimit': 2 },
-#     'large': { 'node': 30, 'edge': 80, 'corelimit': 3 }
-# }
+net_limit = {
+    'small' : { 'node': 10, 'edge': 20, 'corelimit': 1 },
+    'medium': { 'node': 20, 'edge': 40, 'corelimit': 2 },
+    'large': { 'node': 30, 'edge': 80, 'corelimit': 3 }
+}
 
 # 线索
 evidence = [

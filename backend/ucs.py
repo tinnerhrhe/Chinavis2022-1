@@ -234,7 +234,7 @@ class pathUCS(UCS):
 
 class subUCS(UCS):
     def __init__(self, graph, ifneighbor=False):
-        self.subgraph = Subgraph(["id","style"],["id","source","target"])
+        self.subgraph = Subgraph(["id","style","score"],["id","source","target"])
         self.ifneighbor = ifneighbor
 
         self.default_style = {}
@@ -260,7 +260,8 @@ class subUCS(UCS):
                 self.visitedNode.add(neighbor)
                 self.subgraph.addNode({
                     "id": neighbor,
-                    "style": self.default_style
+                    "style": self.default_style,
+                    "score": queryScore(neighbor)
                 })
 
     def add_node(self, node: Node):
@@ -271,7 +272,8 @@ class subUCS(UCS):
                 self.visitedNode.add(tptr)
             self.subgraph.addNode({
                 "id": tptr,
-                "style": self.core_style
+                "style": self.core_style,
+                "score": queryScore(tptr)
             })
 
             while tptr != self.source:
@@ -287,7 +289,8 @@ class subUCS(UCS):
                     if tptr != self.source:
                         self.subgraph.addNode({
                             "id": tedge["prev"],
-                            "style": self.default_style
+                            "style": self.default_style,
+                            "score": queryScore(tedge["prev"])
                         })
                 tptr = tedge["prev"]
 
@@ -308,7 +311,8 @@ class subUCS(UCS):
         # Add source node into subgraph
         self.subgraph.addNode({
             "id": self.source,
-            "style": self.core_style
+            "style": self.core_style,
+            "score": queryScore(self.source)
         })
         if self.ifneighbor:
             # Prevent duplicates

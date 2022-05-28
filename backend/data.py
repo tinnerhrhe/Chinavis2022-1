@@ -105,6 +105,13 @@ class Node:
     def queryNeighbors(self):
         return pd.concat([self.queryChildren(), self.queryParents()])
 
+DEFAULT_SCORE = 10
+
+def queryScore(node_id):
+    if node_id in scorednode.index:
+        return scorednode['score'][node_id]
+    else:
+        return DEFAULT_SCORE # Default score
 
 # Filter the same nodes into a smaller number.
 # For stability concern, we use head() instead of sample()
