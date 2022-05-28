@@ -266,3 +266,7 @@ h2 {
   float: left;
   position: relative;
 }
+
+#wordcloud-container-id{
+  filter: invert(100%);
+}
