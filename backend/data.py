@@ -54,7 +54,7 @@ from meta import *
 # 筛选同类型节点的底数
 FILTER_BASE = 20
 # 筛选阈值
-FILTER_THRESHOLD = 50
+FILTER_THRESHOLD = 100
 # 核心节点打分应当为 5% 以内
 CORETOP = 5
 
@@ -122,27 +122,31 @@ def queryScore(node_id):
     else:
         return DEFAULT_SCORE # Default score
 
+def sort_by_score(curnode, neighbors):
+    # filter by scorednode for mining.
+    new_neighbors = neighbors[neighbors['source'].isin(scorednode.index) & neighbors['target'].isin(scorednode.index)]
+    if len(new_neighbors) == 0:
+        return neighbors  # keep some nodes to mine
+    new_neighbors['neighbor'] = new_neighbors.apply(
+        lambda x: 
+        x['source'] if x['target'] == curnode 
+        else x['target'], axis=1)
+    new_neighbors['score'] = new_neighbors['neighbor'].apply(
+        lambda x: scorednode['score'][x])
+    return new_neighbors.sort_values(by='score', ascending=False)
+
 # Filter the same nodes into a smaller number.
 # For stability concern, we use head() instead of sample()
 # group_filtered = log_{filter_threshold}^len(x)
 def filter(curnode, neighbors):
-    # filter by scorednode for mining.
-    neighbors = neighbors[neighbors['source'].isin(scorednode.index) & neighbors['target'].isin(scorednode.index)]
-    if len(neighbors) == 0:
-        return neighbors[['id', 'relation', 'source', 'target']]
-    neighbors['neighbor'] = neighbors.apply(
-        lambda x: 
-        x['source'] if x['target'] == curnode 
-        else x['target'], axis=1)
-    neighbors['score'] = neighbors['neighbor'].apply(
-        lambda x: scorednode['score'][x])
-    neighbors = neighbors.sort_values(by='score', ascending=False)
+
+    neighbors = sort_by_score(curnode, neighbors)
 
     # Filter is only used in searchUCS
     global remainnode
-    remainnode.drop(index=neighbors['neighbor'], inplace=True, errors='ignore')
-    # remainnode.drop(index=neighbors['source'], inplace=True, errors='ignore')
-    # remainnode.drop(index=neighbors['target'], inplace=True, errors='ignore')
+    # remainnode.drop(index=neighbors['neighbor'], inplace=True, errors='ignore')
+    remainnode.drop(index=neighbors['source'], inplace=True, errors='ignore')
+    remainnode.drop(index=neighbors['target'], inplace=True, errors='ignore')
     # remainnode = remainnode[(remainnode.index.isin(neighbors['source']) == False) & (remainnode.index.isin(neighbors['target']) == False)]
 
     if len(neighbors) > FILTER_THRESHOLD:

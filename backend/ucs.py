@@ -247,54 +247,45 @@ class subUCS(UCS):
     def get_neighbors(self, node: Node):
         return toRecords(node.queryNeighbors())
 
+    def add_visited_node(self, node_id, iscore):
+        if node_id not in self.visitedNode:
+            self.visitedNode.add(node_id)
+            self.subgraph.addNode({
+                "id": node_id,
+                "style": self.core_style if iscore else self.default_style,
+                "score": queryScore(node_id)
+            })
+    
+    def add_visited_edge(self, edge_id, source, target):
+        if edge_id not in self.visitedEdge:
+            self.visitedEdge.add(edge_id)
+            self.subgraph.addEdge({
+                "id": str(edge_id),
+                "source": source,
+                "target": target,
+            })
+
     def add_neighbors(self, node_id):
         neighbors = self.get_neighbors(Node(self.graph,node_id))
         for e in neighbors:
-            if e["id"] in self.visitedEdge:
-                continue
-            self.visitedEdge.add(e["id"])
-            self.subgraph.addEdge({
-                "id": str(e["id"]),
-                "source": e["source"],
-                "target": e["target"],
-            })
+            self.add_visited_edge(e["id"], e["source"], e["target"])
             neighbor = e["target"] if e["source"] == node_id else e["source"]
-            if neighbor not in self.visitedNode:
-                self.visitedNode.add(neighbor)
-                self.subgraph.addNode({
-                    "id": neighbor,
-                    "style": self.default_style,
-                    "score": queryScore(neighbor)
-                })
+            self.add_visited_node(neighbor, False)
 
     def add_node(self, node: Node):
         if node.node_id in self.targets:
             self.targets.remove(node.node_id)
             tptr = node.node_id
-            if self.ifneighbor:
-                self.visitedNode.add(tptr)
-            self.subgraph.addNode({
-                "id": tptr,
-                "style": self.core_style,
-                "score": queryScore(tptr)
-            })
+            self.add_visited_node(tptr, True)
 
             while tptr != self.source:
                 tedge = self.edge_to[tptr]
                 if self.ifneighbor:
                     self.add_neighbors(tptr)
                 else:
-                    self.subgraph.addEdge({
-                        "id": str(tedge["id"]),
-                        "source": tedge["prev"],
-                        "target": tptr,
-                    })
+                    self.add_visited_edge(tedge["id"], tedge["prev"], tptr)
                     if tptr != self.source:
-                        self.subgraph.addNode({
-                            "id": tedge["prev"],
-                            "style": self.default_style,
-                            "score": queryScore(tedge["prev"])
-                        })
+                        self.add_visited_node(tedge["prev"], False)
                 tptr = tedge["prev"]
 
         return len(self.targets) == 0
@@ -311,17 +302,10 @@ class subUCS(UCS):
         # Store the prev node
         self.edge_to = {}
 
+        self.visitedNode = set()
         # Add source node into subgraph
-        self.subgraph.addNode({
-            "id": self.source,
-            "style": self.core_style,
-            "score": queryScore(self.source)
-        })
-        if self.ifneighbor:
-            # Prevent duplicates
-            self.visitedNode = set()
-            self.visitedEdge = set()
-            self.visitedNode.add(self.source)
+        self.add_visited_node(self.source, True)
+        self.visitedEdge = set()
 
         q = [[0, self.source]]
         super().run(q)
