@@ -150,6 +150,7 @@ def filter(curnode, neighbors):
     # remainnode = remainnode[(remainnode.index.isin(neighbors['source']) == False) & (remainnode.index.isin(neighbors['target']) == False)]
 
     if len(neighbors) > FILTER_THRESHOLD:
+        neighbors = sort_by_score(curnode, neighbors)
         neighbors = neighbors.groupby(["relation"]).apply(
             lambda x: x.head(int(FILTER_BASE * math.log(len(x), FILTER_THRESHOLD)))
             if len(x) > FILTER_THRESHOLD
