@@ -140,7 +140,7 @@ def sort_by_score(curnode, neighbors):
 # group_filtered = log_{filter_threshold}^len(x)
 def filter(curnode, neighbors):
 
-    neighbors = sort_by_score(curnode, neighbors)
+    # neighbors = sort_by_score(curnode, neighbors)
 
     # Filter is only used in searchUCS
     global remainnode
