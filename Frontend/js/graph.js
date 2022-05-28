@@ -3,6 +3,37 @@ graph.json?graphid={graphId}
 core.json?graphid={graphId}
 path.json?graphid={graphId}
 */
+
+function clearElement(elem) {
+  while (elem.firstChild) {
+    elem.firstChild.remove();
+  }
+}
+
+function selectPlotAll() {
+  var ele = document.getElementById('container');
+  clearElement(ele);
+  var ele2 = document.getElementById('img1-id');
+  var graphId = Number(ele2.getAttribute('ImageId'));
+  getJsonAndPlot(graphId);
+}
+
+function selectPlotCore() {
+  var ele = document.getElementById('container');
+  clearElement(ele);
+  var ele2 = document.getElementById('img1-id');
+  var graphId = Number(ele2.getAttribute('ImageId'));
+  getCoreJsonAndPlot(graphId);
+}
+
+function selectPlotSub() {
+  var ele = document.getElementById('container');
+  clearElement(ele);
+  var ele2 = document.getElementById('img1-id');
+  var graphId = Number(ele2.getAttribute('ImageId'));
+  getSubJsonAndPlot(graphId);
+}
+
 function getJsonAndPlot(graphId) {
     var reqStr = "./output/" + graphId + "/graph.json";
     //var reqStr = "graph.json?graphid=" + graphId;
@@ -33,13 +64,76 @@ function getJsonAndPlot(graphId) {
     }
     getText();
 }
+
+function getSubJsonAndPlot(graphId) {
+  var reqStr = "./output/" + graphId + "/subgraph.json";
+    //var reqStr = "graph.json?graphid=" + graphId;
+    var xmlHttp = null;
+    if (window.ActiveXObject) {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    else if (window.XMLHttpRequest) {
+        xmlHttp = new XMLHttpRequest();
+    }
+    else {
+        alert("Unsupported Website Broswer!");
+    }
+
+    if (xmlHttp != null) {
+        xmlHttp.open("GET", reqStr, true);
+        xmlHttp.send();
+        xmlHttp.onreadystatechange = getText;
+    }
+
+    function getText() {
+        if (xmlHttp.readyState == 4) {
+            if (xmlHttp.status == 200) {
+                data = JSON.parse(xmlHttp.responseText);
+                plotGraph(data);
+            }
+        }
+    }
+    getText();
+}
+
+function getCoreJsonAndPlot(graphId) {
+  var reqStr = "./output/" + graphId + "/coregraph.json";
+    //var reqStr = "graph.json?graphid=" + graphId;
+    var xmlHttp = null;
+    if (window.ActiveXObject) {
+        xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    else if (window.XMLHttpRequest) {
+        xmlHttp = new XMLHttpRequest();
+    }
+    else {
+        alert("Unsupported Website Broswer!");
+    }
+
+    if (xmlHttp != null) {
+        xmlHttp.open("GET", reqStr, true);
+        xmlHttp.send();
+        xmlHttp.onreadystatechange = getText;
+    }
+
+    function getText() {
+        if (xmlHttp.readyState == 4) {
+            if (xmlHttp.status == 200) {
+                data = JSON.parse(xmlHttp.responseText);
+                plotCoreGraph(data);
+            }
+        }
+    }
+    getText();
+}
+
 function plotCoreGraph(remoteData){
     cate={
         'Domain': 0,
         'IP': 1,
         'Cert': 2
     }
-    var dom = document.getElementById('chart-container');
+    var dom = document.getElementById('container');
     const descriptionDiv = document.createElement('div');
     descriptionDiv.style.textAlign = 'right';
     descriptionDiv.style.color = '#fff';
