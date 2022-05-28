@@ -33,7 +33,97 @@ function getJsonAndPlot(graphId) {
     }
     getText();
 }
-
+function plotCoreGraph(remoteData){
+    cate={
+        'Domain': 0,
+        'IP': 1,
+        'Cert': 2
+    }
+    var dom = document.getElementById('chart-container');
+    const descriptionDiv = document.createElement('div');
+    descriptionDiv.style.textAlign = 'right';
+    descriptionDiv.style.color = '#fff';
+    descriptionDiv.style.position = 'absolute';
+    descriptionDiv.style.right = '32px';
+    descriptionDiv.style.marginTop = '8px';
+    dom.appendChild(descriptionDiv);
+    dom.style.backgroundColor = 'rgba(0,0,0)';
+    var myChart = echarts.init(dom, 'dark', {
+        renderer: 'canvas',
+        useDirtyRect: false
+    });
+    var option;
+    var app = {};
+    remoteData.categories=[
+        {
+            "name": "Domain"
+          },
+          {
+            "name": "IP"
+          },
+          {
+            "name": "Cert"
+          }
+    ]
+    var names=[],Node=[];
+    remoteData.nodes.forEach(function (node) {
+      if(names.indexOf(node.id) == -1){
+        names.push(node.id);
+      }
+    });
+    for(i=0;i<names.length;i++){
+        Node.push({'name':names[i]});
+    }
+    remoteData.nodes=Node;
+    remoteData.nodes.forEach(function (node) {
+      console.log(node.name);
+      node.symbolSize = 10;
+      node.id=node.name;
+      node.x=0;
+      node.y=0;
+      node.value=0;
+      node.category=cate[node.name.split('_')[0]];
+    });
+    option = {
+      title: {
+        text: 'Core Assets',
+        subtext: 'Default layout',
+        top: 'bottom',
+        left: 'right'
+      },
+      tooltip: {},
+      legend: [
+        {
+          // selectedMode: 'single',
+          data: remoteData.categories.map(function (a) {
+            return a.name;
+          })
+        }
+      ],
+      series: [
+        {
+          name: 'Core Assets',
+          type: 'graph',
+          layout: 'force',
+          data: remoteData.nodes,
+          links: remoteData.edges,
+          categories: remoteData.categories,
+          roam: true,
+          label: {
+            position: 'right'
+          },
+          force: {
+            repulsion: 100
+          }
+        }
+      ]
+    };
+    if (option && typeof option === 'object') {
+        myChart.setOption(option);
+      }
+      
+      window.addEventListener('resize', myChart.resize);
+}
 function plotGraph(remoteData) {
     function isNumber(n){
       return n.length == 1;
