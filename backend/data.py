@@ -16,24 +16,18 @@ link = pd.read_csv("data/Link.csv")
 link["id"] = link.index
 
 # 生成打分后的节点数据表
-if os.path.isfile("data/scorednode.csv"):
-    print("Use cached data/scorednode.csv")
-    scorednode = pd.read_csv("data/scorednode.csv", index_col='id')
-else:
-    print("Generating data/scorednode.csv")
-    scorednode = node.dropna()
-    scorednode = scorednode.drop_duplicates('id', keep='first')
-    scorednode = scorednode[(scorednode['industry'] != '[]') |
-                    (scorednode['type'] != 'Domain')]
-    scorednode = scorednode.reset_index() #index和npy对应
-    score = np.load('score.npy')
-    score = pd.DataFrame(score, columns=['score'])
-    scorednode = pd.concat([node, score], axis=1)
-    scorednode.set_index('id', inplace=True)
-    scorednode.to_csv('data/scorednode.csv')
+scorednode = copy.deepcopy(node)
+scorednode = scorednode.dropna()
+scorednode = scorednode.drop_duplicates('id', keep='first')
+scorednode = scorednode[(scorednode['industry'] != '[]') |
+                (scorednode['type'] != 'Domain')]
+scorednode = scorednode.reset_index() #index和npy对应
+score = np.load('score.npy')
+score = pd.DataFrame(score, columns=['score'])
+scorednode = pd.concat([scorednode, score], axis=1)
+scorednode.set_index('id', inplace=True)
 
 print("Load Data Complete.")
-
 print("Scored Node: %d (%.2f%%)" % (len(scorednode), len(scorednode) / len(node) * 100))
 
 #############################
@@ -126,17 +120,18 @@ def queryScore(node_id):
 # For stability concern, we use head() instead of sample()
 # group_filtered = log_{filter_threshold}^len(x)
 def filter(curnode, neighbors):
-    # filter by scorednode for mining.
-    neighbors = neighbors[neighbors['source'].isin(scorednode.index) & neighbors['target'].isin(scorednode.index)]
-    if len(neighbors) == 0:
-        return neighbors[['id', 'relation', 'source', 'target']]
-    neighbors['neighbor'] = neighbors.apply(lambda x: x['source'] if x['target'] == curnode else x['target'], axis=1)
-    neighbors['score'] = neighbors['neighbor'].apply(lambda x: scorednode['score'][x])
-    neighbors = neighbors.sort_values(by='score', ascending=False)
+    # # filter by scorednode for mining.
+    # neighbors = neighbors[neighbors['source'].isin(scorednode.index) & neighbors['target'].isin(scorednode.index)]
+    # if len(neighbors) == 0:
+    #     return neighbors[['id', 'relation', 'source', 'target']]
+    # neighbors['neighbor'] = neighbors.apply(lambda x: x['source'] if x['target'] == curnode else x['target'], axis=1)
+    # neighbors['score'] = neighbors['neighbor'].apply(lambda x: scorednode.iloc[x, 'score'])
+    # neighbors = neighbors.sort_values(by='score', ascending=False)
 
     # Filter is only used in searchUCS
     global remainnode
-    remainnode = remainnode[remainnode.index.isin(neighbors['neighbor']) == False]
+    # remainnode = remainnode[remainnode.index.isin(neighbors['neighbor']) == False]
+    remainnode = remainnode[(remainnode.index.isin(neighbors['source']) == False) & (remainnode.index.isin(neighbors['target']) == False)]
 
     if len(neighbors) > FILTER_THRESHOLD:
         neighbors = neighbors.groupby(["relation"]).apply(
@@ -165,6 +160,10 @@ def coreasset(curnode, neighbors, limitation):
     # 核心资产的邻居数目不得低于这个数值
     if len(neighbors) <= net_limit[limitation]['corelimit']:
         return False
+    # 没有打分的节点不是核心节点
+    if curnode not in scorednode.index:
+        return False
+    # 分数不够高的节点不是核心节点
     if scorednode['score'][curnode] < corescorethres:
         return False
     return True
@@ -175,6 +174,6 @@ def toRecords(neighbors):
 
 # 查询产业，如果产业为空将返回 [""] 没有特殊处理，这将表示没有产业，可以被忽略。
 def queryIndustry(node_id):
-    return scorednode['industry'][node_id][1:-1].replace("'","").replace(" ","").split(',')
+    return node[node['id']==node_id].iloc[0]['industry'][1:-1].replace("'","").replace(" ","").split(',')
 
 #############################

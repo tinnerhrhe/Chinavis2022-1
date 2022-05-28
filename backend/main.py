@@ -9,7 +9,7 @@ outputdir = 'output'
 
 def main_run(source, limitation, ord):
     print("----------------------------")
-    print("Searching Order: %d" % ord)
+    print("Searching Order %d on %s" % (ord, source))
 
     cachedir = outputdir + '/' + str(ord)
     if not os.path.isdir(cachedir):
