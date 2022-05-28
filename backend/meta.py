@@ -34,9 +34,9 @@ link_limit = {
 
 # 网络限制
 net_limit = {
-    'small' : { 'node': 400, 'edge': 800, 'corelimit': 6 },
-    'medium': { 'node': 800, 'edge': 1600, 'corelimit': 10 },
-    'large': { 'node': 3000, 'edge': 6000, 'corelimit': 20 }
+    'small' : { 'node': 400, 'edge': 800, 'corelimit': 6, 'filterbase': 20 },
+    'medium': { 'node': 800, 'edge': 1600, 'corelimit': 10, 'filterbase': 30 },
+    'large': { 'node': 3000, 'edge': 6000, 'corelimit': 20, 'filterbase': 70 }
 }
 
 ## DEBUG USE ONLY
@@ -52,5 +52,5 @@ evidence = [
     ["IP_400c19e584976ff2a35950659d4d148a3d146f1b71692468132b849b0eb8702c", "medium"],
     ["Domain_24acfd52f9ceb424d4a2643a832638ce1673b8689fa952d9010dd44949e6b1d9", "medium"],
     ["IP_7e730b193c2496fc908086e8c44fc2dbbf7766e599fabde86a4bcb6afdaad66e", "large"],
-    ["IP_21ce145cae6730a99300bf677b83bbe430cc0ec957047172e73659372f0031b8","large"]
+    ["Domain_7939d01c5b99c39d2a0f2b418f6060b917804e60c15309811ef4059257c0818a","large"]
 ]

@@ -109,7 +109,7 @@ class searchUCS(UCS):
         before = len(neighbors)
         node.iscore = coreasset(node.node_id, neighbors, self.limitation)
         # 这将移除关联的邻居节点
-        neighbors = filter(node.node_id, neighbors)
+        neighbors = filter(node.node_id, neighbors, self.limitation)
         after = len(neighbors)
         print("%d" % before if before == after else "%d(%d)" % (before, after), end=" ")
 

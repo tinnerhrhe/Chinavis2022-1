@@ -138,7 +138,7 @@ def sort_by_score(curnode, neighbors):
 # Filter the same nodes into a smaller number.
 # For stability concern, we use head() instead of sample()
 # group_filtered = log_{filter_threshold}^len(x)
-def filter(curnode, neighbors):
+def filter(curnode, neighbors, limitation):
 
     # neighbors = sort_by_score(curnode, neighbors)
 
@@ -152,7 +152,7 @@ def filter(curnode, neighbors):
     if len(neighbors) > FILTER_THRESHOLD:
         neighbors = sort_by_score(curnode, neighbors)
         neighbors = neighbors.groupby(["relation"]).apply(
-            lambda x: x.head(int(FILTER_BASE * math.log(len(x), FILTER_THRESHOLD)))
+            lambda x: x.head(int(net_limit[limitation]['filterbase'] * math.log(len(x), FILTER_THRESHOLD)))
             if len(x) > FILTER_THRESHOLD
             else x
         )
