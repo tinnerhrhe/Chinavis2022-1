@@ -34,6 +34,8 @@ else:
 
 print("Load Data Complete.")
 
+print("Scored Node: %d (%.2f%%)" % (len(scorednode), len(scorednode) / len(node) * 100))
+
 #############################
 
 # 记录访问节点
@@ -57,9 +59,12 @@ FILTER_THRESHOLD = 50
 CORETOP = 5
 
 def refreshcorethres():
-    global corescorethres
+    global corescorethres, remainnode
+    # Rearrange remainnode.
+    remainnode = remainnode.sort_values(by='score', ascending=False)
+    # Calculate corescorethres by percentile.
     corescorethres = remainnode['score'].describe(percentiles=[(100 - CORETOP) / 100])[str(100 - CORETOP) + '%']
-    print("Remaining Node: %d, Threshold Score for Core node is %.2f" % (len(remainnode), corescorethres))
+    print("Remaining Node: %d (%.2f%%), Threshold Score for Core node is %.2f" % (len(remainnode), len(remainnode) / len(scorednode) * 100, corescorethres))
 refreshcorethres()
 
 # 图：预期使用 pandas 存储

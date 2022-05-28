@@ -8,6 +8,9 @@ import shutil
 outputdir = 'output'
 
 def main_run(source, limitation, ord):
+    print("----------------------------")
+    print("Searching Order: %d" % ord)
+
     cachedir = outputdir + '/' + str(ord)
     if not os.path.isdir(cachedir):
         os.mkdir(cachedir)
