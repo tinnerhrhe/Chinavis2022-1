@@ -4,8 +4,9 @@ import heapq
 
 # 一致代价搜索 Uniform Cost Search
 class UCS:
-    def __init__(self, graph, stepshow=False, vis_node=None, vis_edge=None):
+    def __init__(self, graph, priority_depth_limit=4, stepshow=False, vis_node=None, vis_edge=None):
         self.graph = graph
+        self.priority_depth_limit = priority_depth_limit
         self.stepshow = stepshow # 与算法有关，是否访问边时将节点加入
         if stepshow:
             if vis_node is not None:
@@ -58,7 +59,7 @@ class UCS:
 
             # 限制深度
             max_priority = top_priority + 1
-            if max_priority not in link_limit.keys():
+            if max_priority > self.priority_depth_limit:
                 continue
 
             for e in neighbors:
@@ -99,7 +100,7 @@ class searchUCS(UCS):
         self.default_style = {}
         self.core_style = {"fill": "blue"}
 
-        super().__init__(graph, True, vis_node, vis_edge)
+        super().__init__(graph, 4, True, vis_node, vis_edge)
 
     def get_neighbors(self, node: Node):
         if node.label == "IP" or node.label == "Cert":
@@ -187,10 +188,7 @@ class searchUCS(UCS):
 
 class pathUCS(UCS):
     def __init__(self, graph):
-        # Critical Path cannot be longer than 4
-        self.DEPTH_LIMIT = 4
-
-        super().__init__(graph, False)
+        super().__init__(graph, 3, False)
 
     def get_neighbors(self, node: Node):
         return toRecords(node.queryNeighbors())
@@ -207,13 +205,10 @@ class pathUCS(UCS):
                 tptr = tedge["prev"]
             tpath.reverse()
 
-            if len(tpath) > self.DEPTH_LIMIT:
-                print("%s: Not critical." % node.node_id)
-            else:
-                for edgeid in tpath:
-                    self.visitedEdges.add(edgeid)
-                self.targetPaths[node.node_id] = tpath
-                print("%s: %s" % (node.node_id, str(tpath)))
+            for edgeid in tpath:
+                self.visitedEdges.add(edgeid)
+            self.targetPaths[node.node_id] = tpath
+            print("%s: %s" % (node.node_id, str(tpath)))
 
         return len(self.targets) == 0
 
@@ -243,7 +238,7 @@ class subUCS(UCS):
 
         self.default_style = {}
         self.core_style = {"fill": "blue"}
-        super().__init__(graph, False)
+        super().__init__(graph, 10, False) # Almost infinity.
 
     def get_neighbors(self, node: Node):
         return toRecords(node.queryNeighbors())
@@ -296,8 +291,7 @@ class subUCS(UCS):
         self.edge_to[neighbor] = {"id": e["id"], "prev": curnode}
 
     def sub_run(self, subset):
-        random.seed(42)
-        self.source = subset[random.randint(0, len(subset)-1)] # randomized start
+        self.source = subset[0]
         self.targets = set(subset)
         self.targets.remove(self.source)
 
