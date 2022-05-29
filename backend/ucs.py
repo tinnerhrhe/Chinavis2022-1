@@ -1,3 +1,4 @@
+import random
 from data import *
 import heapq
 
@@ -295,7 +296,8 @@ class subUCS(UCS):
         self.edge_to[neighbor] = {"id": e["id"], "prev": curnode}
 
     def sub_run(self, subset):
-        self.source = subset[0]
+        random.seed(42)
+        self.source = subset[random.randint(0, len(subset)-1)] # randomized start
         self.targets = set(subset)
         self.targets.remove(self.source)
 
