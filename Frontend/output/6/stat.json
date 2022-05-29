@@ -1,1 +1,1 @@
-{"nodes": {"IP": 15, "Domain": 99, "ASN": 1, "Cert": 1}, "edges": {"r_dns_a": 115, "r_cidr": 3, "r_asn": 1, "r_cert": 89, "r_subdomain": 6, "r_cname": 1}, "industries": {"": 17, "A": 96, "B": 15}}
+{"nodes": {"IP": 222, "Domain": 1971, "ASN": 10, "Cert": 782, "Whois": 15}, "edges": {"r_dns_a": 1117, "r_cidr": 33, "r_asn": 10, "r_subdomain": 457, "r_cert": 988, "r_cname": 39, "r_cert_chain": 669, "r_whois_phone": 5, "r_whois_name": 12, "r_whois_email": 1}, "industries": {"": 1723, "A": 637, "B": 710, "G": 53, "I": 6, "C": 45, "F": 1, "H": 3}}
