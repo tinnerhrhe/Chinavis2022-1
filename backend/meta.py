@@ -41,16 +41,16 @@ net_limit = {
 
 ## DEBUG USE ONLY
 # net_limit = {
-#     'small' : { 'node': 10, 'edge': 20, 'corelimit': 1 },
-#     'medium': { 'node': 20, 'edge': 40, 'corelimit': 2 },
-#     'large': { 'node': 30, 'edge': 80, 'corelimit': 3 }
+#     'small' : { 'node': 10, 'edge': 20, 'corelimit': 1, 'filterbase': 2 },
+#     'medium': { 'node': 100, 'edge': 200, 'corelimit': 2, 'filterbase': 3 },
+#     'large': { 'node': 100, 'edge': 80, 'corelimit': 3, 'filterbase': 7 }
 # }
 
 # 线索
 evidence = [
     ["Domain_c58c149eec59bb14b0c102a0f303d4c20366926b5c3206555d2937474124beb9", "small"],
     ["IP_400c19e584976ff2a35950659d4d148a3d146f1b71692468132b849b0eb8702c", "medium"],
-    ["Domain_24acfd52f9ceb424d4a2643a832638ce1673b8689fa952d9010dd44949e6b1d9", "medium"],
+    ["Domain_717aa5778731a1f4d6f0218dd3a27b114c839213b4af781427ac1e22dc9a7dea", "medium"],
     ["IP_7e730b193c2496fc908086e8c44fc2dbbf7766e599fabde86a4bcb6afdaad66e", "large"],
     ["Domain_7939d01c5b99c39d2a0f2b418f6060b917804e60c15309811ef4059257c0818a","large"]
 ]
