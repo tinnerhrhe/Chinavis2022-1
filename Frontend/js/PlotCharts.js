@@ -177,13 +177,16 @@ function realPlotPie(graphId, divId, jsonData, gtype) {
         myChart.setOption(option);
     }
 }
-
+var graphId = '0';
 function prevSelect() {
     //从sessionStorage中读取img个数
     var imgNum = Number(sessionStorage.getItem('img-num'));
+    graphId = (graphId + 1) % imgNum;
     ele1 = document.getElementById('img0-id');
     ele2 = document.getElementById('img1-id');
     ele3 = document.getElementById('img2-id');
+    ele4 = document.getElementById('img3-id');
+    ele5 = document.getElementById('img4-id');
 
     var ele_cap = document.getElementById('select-scan-id');
 
@@ -191,41 +194,57 @@ function prevSelect() {
     ele1.setAttribute('ImageId', ele2.getAttribute('ImageId'));
     ele2.setAttribute('src', ele3.getAttribute('src'));
     ele2.setAttribute('ImageId', ele3.getAttribute('ImageId'));
-    var nextId = (Number(ele2.getAttribute('ImageId')) + 1) % imgNum;
-    var tmp_path = './images/' + nextId + '.jpg';
-    ele3.setAttribute('src', tmp_path);
-    ele3.setAttribute('ImageId', '' + nextId);
+    ele3.setAttribute('src', ele4.getAttribute('src'));
+    ele3.setAttribute('ImageId', ele4.getAttribute('ImageId'));
+    ele4.setAttribute('src', ele5.getAttribute('src'));
+    ele4.setAttribute('ImageId', ele5.getAttribute('ImageId'));
+    ele5.setAttribute('src', ele1.getAttribute('src'));
+    ele5.setAttribute('ImageId', ele1.getAttribute('ImageId'));
+    //var nextId = (Number(ele2.getAttribute('ImageId')) + 1) % imgNum;
+    var tmp_path = './images/' + graphId + '.png';
+    //ele5.setAttribute('src', tmp_path);
+    //ele5.setAttribute('ImageId', '' + nextId);
 
     ///
-    console.log("Begin to plot..." + nextId);
-    plotBarsPieGraph('right-bar-id','right-pie-id1','right-pie-id2',nextId);
-    getJsonAndPlot(nextId);
-    ele_cap.innerHTML = '子图' + nextId;
+    console.log("Begin to plot..." + graphId);
+    ele_cap.innerHTML = '子图' + graphId;
+    plotBarsPieGraph('right-bar-id','right-pie-id1','right-pie-id2',graphId);
+    getJsonAndPlot(graphId);
 }
 
 function nextSelect() {
     //从sessionStorage中读取img个数
     var imgNum = Number(sessionStorage.getItem('img-num'));
+    graphId = (graphId +imgNum- 1) % imgNum;
     ele1 = document.getElementById('img0-id');
     ele2 = document.getElementById('img1-id');
     ele3 = document.getElementById('img2-id');
-
+    ele4 = document.getElementById('img3-id');
+    ele5 = document.getElementById('img4-id');
     var ele_cap = document.getElementById('select-scan-id');
-    
+
+    ele5.setAttribute('src', ele4.getAttribute('src'));
+    ele5.setAttribute('ImageId', ele4.getAttribute('ImageId'));
+    ele4.setAttribute('src', ele3.getAttribute('src'));
+    ele4.setAttribute('ImageId', ele3.getAttribute('ImageId'));
     ele3.setAttribute('src', ele2.getAttribute('src'));
     ele3.setAttribute('ImageId', ele2.getAttribute('ImageId'));
     ele2.setAttribute('src', ele1.getAttribute('src'));
     ele2.setAttribute('ImageId', ele1.getAttribute('ImageId'));
-    var nextId = (Number(ele1.getAttribute('ImageId')) + imgNum - 1) % imgNum;
-    var tmp_path = './images/' + nextId + '.jpg';
-    ele1.setAttribute('src', tmp_path);
-    ele1.setAttribute('ImageId', '' + nextId);
+    ele1.setAttribute('src', ele5.getAttribute('src'));
+    ele1.setAttribute('ImageId', ele5.getAttribute('ImageId'));
+   // var nextId = (Number(ele1.getAttribute('ImageId')) + imgNum - 1) % imgNum;
+    //ele1.setAttribute('src', tmp_path);
+    //ele1.setAttribute('ImageId', '' + nextId);
+    var tmp_path = './images/' + graphId + '.png';
+    //ele5.setAttribute('src', tmp_path);
+    //ele5.setAttribute('ImageId', '' + nextId);
 
     ///
-    console.log("Begin to plot..." + nextId);
-    plotBarsPieGraph('right-bar-id','right-pie-id1','right-pie-id2',nextId);
-    getJsonAndPlot(nextId);
-    ele_cap.innerHTML = '子图' + nextId;
+    console.log("Begin to plot..." + graphId);
+    ele_cap.innerHTML = '子图' + graphId;
+    plotBarsPieGraph('right-bar-id','right-pie-id1','right-pie-id2',graphId);
+    getJsonAndPlot(graphId);
 }
 
 function realPlotWordCloud(divId, data) {
