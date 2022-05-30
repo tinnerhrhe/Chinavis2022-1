@@ -162,6 +162,7 @@ function plotCoreGraph(remoteData){
             "name": "Cert"
           }
     ]
+    /*
     var names=[],Node=[];
     remoteData.nodes.forEach(function (node) {
       if(names.indexOf(node.id) == -1){
@@ -175,6 +176,40 @@ function plotCoreGraph(remoteData){
     remoteData.nodes.forEach(function (node) {
       console.log(node.name);
       node.symbolSize = 10;
+      node.id=node.name;
+      node.x=0;
+      node.y=0;
+      node.value=0;
+      node.category=cate[node.name.split('_')[0]];
+    });
+    */
+    var names=[],Node=[],scores=[];
+    remoteData.nodes.forEach(function (node) {
+      if(names.indexOf(node.id) == -1){
+        names.push(node.id);
+        scores.push(node.score);
+      }
+    });
+    var max=0,min=1000000;
+    for(let i of scores){
+        if(max<i)
+        max=i;
+        if(min>i)
+        min=i;
+    }
+    for(let i=0;i<scores.length;i++){
+        scores[i]=(scores[i]-min)/(max-min)*50;
+        if(scores[i]<5)
+        scores[i]=5;
+    }
+    //console.log(scores);
+    for(let i=0;i<names.length;i++){
+        Node.push({'name':names[i],'score':scores[i]});
+    }
+    remoteData.nodes=Node;
+    remoteData.nodes.forEach(function (node) {
+      console.log(node.name);
+      node.symbolSize = node.score;
       node.id=node.name;
       node.x=0;
       node.y=0;
