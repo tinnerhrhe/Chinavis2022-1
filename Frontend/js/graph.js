@@ -89,7 +89,7 @@ function getSubJsonAndPlot(graphId) {
         if (xmlHttp.readyState == 4) {
             if (xmlHttp.status == 200) {
                 data = JSON.parse(xmlHttp.responseText);
-                plotGraph(data);
+                plotCoreGraph(data);
             }
         }
     }
@@ -133,7 +133,10 @@ function plotCoreGraph(remoteData){
         'IP': 1,
         'Cert': 2
     }
-    var dom = document.getElementById('container');
+    const main = async () => {
+    const dom = document.getElementById('container');
+    dom.removeAttribute('_echarts_instance_');
+    dom.innerHTML = "";
     const descriptionDiv = document.createElement('div');
     descriptionDiv.style.textAlign = 'right';
     descriptionDiv.style.color = '#fff';
@@ -217,6 +220,8 @@ function plotCoreGraph(remoteData){
       }
       
       window.addEventListener('resize', myChart.resize);
+    }
+    main();
 }
 function plotGraph(remoteData) {
     function isNumber(n){
@@ -1983,7 +1988,7 @@ const findPath = () => {
     bindListener(graph);
     graph.data({ nodes: aggregatedData.nodes, edges: processedEdges });
     graph.render();
-    setGraphInstance(graph);
+    //setGraphInstance(graph);
   }
       main();
 }
