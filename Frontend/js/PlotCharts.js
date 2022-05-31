@@ -250,16 +250,14 @@ function nextSelect() {
 }
 
 function changeProblem(){
-    console.log(document.getElementById("select1-id").value)
-    switch(document.getElementById("select1-id").value){
-        case 1:
-            for (var i = 0; i <= 4; ++i) {
-                document.getElementById('img' + i + '-id').setAttribute('src', './images/' + i + '.png');
-            }
-        case 2:
-            for (var i = 0; i <= 4; ++i) {
-                document.getElementById('img' + i + '-id').setAttribute('src', './images/' + (i + 5) + '.png');
-            }
+    if (document.getElementById("select1-id").value == 1) {
+        for (var i = 0; i <= 4; ++i) {
+            document.getElementById('img' + i + '-id').setAttribute('src', './images/' + i + '.png');
+        }
+    } else {
+        for (var i = 0; i <= 4; ++i) {
+            document.getElementById('img' + i + '-id').setAttribute('src', './images/' + (i + 5) + '.png');
+        }
     }
     if (graphId <= 4) graphId += 5;
     else graphId -= 5;
