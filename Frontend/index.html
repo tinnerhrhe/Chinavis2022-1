@@ -103,7 +103,7 @@
             <!--子图信息展示-->
             <div class="subgraph-select-class">
                 <!--左侧选择栏：选择问题1 or 问题2-->
-                <select class="select-class" id="select1-id">
+                <select class="select-class" id="select1-id" onchange="changeProblem()">
                     <option value="1" class="option-class">Challenge 1</option>
                     <option value="2" class="option-class">Challenge 2</option>
                 </select>
@@ -163,7 +163,6 @@
     <script type="text/javascript" src="https://gw.alipayobjects.com/os/lib/antv/g6/4.3.11/dist/g6.min.js"></script>
     <script type="text/javascript">
         initAll();
-        plotBarsPieGraph('right-bar-id','right-pie-id1','right-pie-id2',"0");
-        getJsonAndPlot('0');
+        mainplot();
     </script>
 </body>

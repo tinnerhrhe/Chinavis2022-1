@@ -8,13 +8,13 @@ body {
 }
 
 h2 {
-  width: 980px;
+  width: 920px;
   border: 2px solid rgb(212, 200, 200);
   color: rgb(212, 200, 200);
   border-width: 0px 1.5px 3px 1.5px;
   border-radius: 5px;
   padding: 10px;
-  margin: 0px auto 20px 200px;
+  margin: 0px auto 20px 170px;
   text-align: center;
   background-image: linear-gradient(to bottom, rgb(0,0,0,0.0), rgb(27, 27, 27));
 }
