@@ -128,7 +128,7 @@ def generate(*args):
         targetpos = position(nodes[e['target']])
         c.create_line(sourcepos[0], sourcepos[1], targetpos[0], targetpos[1])
         root.update()
-    search = searchUCS(Graph(node, link), net_limit[limitation], vis_node=vis_node_search, vis_edge=vis_edge_search)
+    search = searchUCS(Graph(node, link), limitation, vis_node=vis_node_search, vis_edge=vis_edge_search)
     search.search_run(node_id)
     labelNode['text'] = 'Node'
     labelEdge['text'] = 'Edge'
