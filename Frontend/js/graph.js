@@ -21,16 +21,18 @@ function selectPlotAll() {
 function selectPlotCore() {
   var ele = document.getElementById('container');
   clearElement(ele);
-  var ele2 = document.getElementById('img1-id');
-  var graphId = Number(ele2.getAttribute('ImageId'));
+  var ele1 = document.getElementById('img0-id');
+  var graphId = Number(ele1.getAttribute('ImageId'));
+  console.log(graphId);
   getCoreJsonAndPlot(graphId);
 }
 
 function selectPlotSub() {
   var ele = document.getElementById('container');
   clearElement(ele);
-  var ele2 = document.getElementById('img1-id');
-  var graphId = Number(ele2.getAttribute('ImageId'));
+  var ele1 = document.getElementById('img0-id');
+  var graphId = Number(ele1.getAttribute('ImageId'));
+  console.log(graphId);
   getSubJsonAndPlot(graphId);
 }
 
@@ -208,7 +210,7 @@ function plotCoreGraph(remoteData){
     }
     remoteData.nodes=Node;
     remoteData.nodes.forEach(function (node) {
-      console.log(node.name);
+      // console.log(node.name);
       node.symbolSize = node.score;
       node.id=node.name;
       node.x=0;

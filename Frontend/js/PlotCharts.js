@@ -252,15 +252,19 @@ function nextSelect() {
 function changeProblem(){
     if (document.getElementById("select1-id").value == 1) {
         for (var i = 0; i <= 4; ++i) {
-            document.getElementById('img' + i + '-id').setAttribute('src', './images/' + i + '.png');
+            var imgdom = document.getElementById('img' + i + '-id');
+            imgdom.setAttribute('src', './images/' + i + '.png');
+            imgdom.setAttribute('ImageId', i);
         }
     } else {
         for (var i = 0; i <= 4; ++i) {
-            document.getElementById('img' + i + '-id').setAttribute('src', './images/' + (i + 5) + '.png');
+            var imgdom = document.getElementById('img' + i + '-id');
+            imgdom.setAttribute('src', './images/' + (i + 5) + '.png');
+            imgdom.setAttribute('ImageId', (i + 5));
         }
     }
-    if (graphId <= 4) graphId += 5;
-    else graphId -= 5;
+    if (graphId <= 4) graphId = 5;
+    else graphId = 0;
     mainplot();
 }
 
