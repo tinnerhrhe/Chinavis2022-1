@@ -2,24 +2,42 @@
 
 ### data
 
-Store `Link.csv` and `Node.csv` in `backend/data/`.
+Prepare data `Link.csv` and `Node.csv` in `backend/data/`.
 
 ### Get Started
 
-Start the server.
-```cmd
-cd backend
-python server.py
-```
+Use Live Share to start the frontend page in `Frontend/index.html`.
 
-### Run Backend Demo
+### Dump output
 
-For script running,
+Run the script to start mining.
+
 ```cmd
 cd backend
 python main.py
 ```
-You could see the dumped JSON file in `output/`.
+
+This will create output in `Frontend/output/*/` containing:
+```
+core.json
+coregraph.json
+graph.json
+stat.json
+subgraph.json
+```
+
+Run the script to get whois info and CSV graph:
+```cmd
+python export.py
+```
+which will generate in `Frontend/output/*/`
+```
+link.csv
+node.csv
+whois.json
+```
+
+### Run Backend Demo
 
 For basic tkinter visualization,
 ```cmd
