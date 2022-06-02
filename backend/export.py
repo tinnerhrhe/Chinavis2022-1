@@ -57,7 +57,7 @@ for i in range(0,MAX_GRAPH):
 
     all_top_info.append(info)
     with open(outputdir + '/' + str(i) + '/whois.json','w',encoding='utf8') as f:
-        json.dump(infos,f)
+        json.dump(infos,f,ensure_ascii=False)
 
 all_top_info = pd.DataFrame(all_top_info, columns=['name', 'email', 'phone'])
 all_top_info.to_csv('info.csv',index=True,encoding='utf8')
