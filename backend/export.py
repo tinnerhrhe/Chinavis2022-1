@@ -35,6 +35,7 @@ def fileWhois(filepath):
     top_email = '' if len(emails) == 0 else list(emails.items())[0][0]
     top_phone = '' if len(phones) == 0 else list(phones.items())[0][0]
     info = [top_name, top_email, top_phone]
+    print(info)
     return info, { 'name': names, 'email': emails, 'phone': phones }
 
 def isEmptyWhois(info):
