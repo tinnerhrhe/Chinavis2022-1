@@ -7,6 +7,8 @@ import os
 # Cache Data for displaying
 
 outputdir = 'output'
+if os.path.islink(outputdir):
+    outputdir = os.readlink(outputdir)
 
 def main_run(source, limitation, ord):
     print("----------------------------")

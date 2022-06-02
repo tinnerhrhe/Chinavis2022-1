@@ -1,5 +1,6 @@
 from data import *
 import json
+import os
 
 def fileWhois(filepath):
     with open(filepath, 'r') as f:
@@ -40,6 +41,8 @@ def isEmptyWhois(info):
     return info[0] == '' and info[1] == '' and info[2] == ''
 
 outputdir = 'output'
+if os.path.islink(outputdir):
+    outputdir = os.readlink(outputdir)
 MAX_GRAPH = 10
 
 all_top_info = []
