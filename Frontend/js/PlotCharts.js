@@ -201,15 +201,15 @@ function prevSelect() {
     ele5 = document.getElementById('img4-id');
 
     ele1.setAttribute('src', ele2.getAttribute('src'));
-    // ele1.setAttribute('ImageId', ele2.getAttribute('ImageId'));
+    ele1.setAttribute('ImageId', ele2.getAttribute('ImageId'));
     ele2.setAttribute('src', ele3.getAttribute('src'));
-    // ele2.setAttribute('ImageId', ele3.getAttribute('ImageId'));
+    ele2.setAttribute('ImageId', ele3.getAttribute('ImageId'));
     ele3.setAttribute('src', ele4.getAttribute('src'));
-    // ele3.setAttribute('ImageId', ele4.getAttribute('ImageId'));
+    ele3.setAttribute('ImageId', ele4.getAttribute('ImageId'));
     ele4.setAttribute('src', ele5.getAttribute('src'));
-    // ele4.setAttribute('ImageId', ele5.getAttribute('ImageId'));
+    ele4.setAttribute('ImageId', ele5.getAttribute('ImageId'));
     ele5.setAttribute('src', ele1.getAttribute('src'));
-    // ele5.setAttribute('ImageId', ele1.getAttribute('ImageId'));
+    ele5.setAttribute('ImageId', ele1.getAttribute('ImageId'));
     //var nextId = (Number(ele2.getAttribute('ImageId')) + 1) % imgNum;
     var tmp_path = './images/' + graphId + '.png';
     //ele5.setAttribute('src', tmp_path);
@@ -230,15 +230,15 @@ function nextSelect() {
     ele5 = document.getElementById('img4-id');
 
     ele5.setAttribute('src', ele4.getAttribute('src'));
-    // ele5.setAttribute('ImageId', ele4.getAttribute('ImageId'));
+    ele5.setAttribute('ImageId', ele4.getAttribute('ImageId'));
     ele4.setAttribute('src', ele3.getAttribute('src'));
-    // ele4.setAttribute('ImageId', ele3.getAttribute('ImageId'));
+    ele4.setAttribute('ImageId', ele3.getAttribute('ImageId'));
     ele3.setAttribute('src', ele2.getAttribute('src'));
-    // ele3.setAttribute('ImageId', ele2.getAttribute('ImageId'));
+    ele3.setAttribute('ImageId', ele2.getAttribute('ImageId'));
     ele2.setAttribute('src', ele1.getAttribute('src'));
-    // ele2.setAttribute('ImageId', ele1.getAttribute('ImageId'));
+    ele2.setAttribute('ImageId', ele1.getAttribute('ImageId'));
     ele1.setAttribute('src', ele5.getAttribute('src'));
-    // ele1.setAttribute('ImageId', ele5.getAttribute('ImageId'));
+    ele1.setAttribute('ImageId', ele5.getAttribute('ImageId'));
    // var nextId = (Number(ele1.getAttribute('ImageId')) + imgNum - 1) % imgNum;
     //ele1.setAttribute('src', tmp_path);
     //ele1.setAttribute('ImageId', '' + nextId);

@@ -193,4 +193,18 @@ def toRecords(neighbors):
 def queryIndustry(node_id):
     return node[node['id']==node_id].iloc[0]['industry'][1:-1].replace("'","").replace(" ","").split(',')
 
+# 查询该 Domain 节点的 whois 信息（非 Domain 节点将返回空串）
+def queryWhois(node_id):
+    neighbors = link[link['source']==node_id]
+    neighbors = neighbors[neighbors['relation'].isin(['r_whois_name','r_whois_email','r_whois_phone'])]
+    node_name = neighbors[neighbors['relation']=='r_whois_name']
+    node_email = neighbors[neighbors['relation']=='r_whois_email']
+    node_phone = neighbors[neighbors['relation']=='r_whois_phone']
+    def extractor(df):
+        if len(df)>=1:
+            return node[node['id']==df.iloc[0]['target']].iloc[0]['name']
+        else:
+            return ''
+    return extractor(node_name), extractor(node_email), extractor(node_phone)
+
 #############################
